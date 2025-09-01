@@ -13,7 +13,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -36,7 +35,15 @@ android {
 }
 
 dependencies {
+// Retrofit + Gson
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+// OkHttp logging (xem log request/response cho dễ debug)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+// Glide (load ảnh coverImage)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
+//    others
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

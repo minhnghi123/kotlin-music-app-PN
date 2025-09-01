@@ -22,13 +22,12 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_backgrround" />
 
-    <!-- RecyclerView danh sách playlist -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPlaylists"
+    <!-- Container để load Fragment -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp" />
+        android:layout_weight="1"/>
 
     <!-- Thanh navigation dưới -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
