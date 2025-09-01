@@ -42,19 +42,14 @@
         android:src="@drawable/ic_backgrround"
         android:layout_below="@id/tvTitle" />
 
-    <!-- RecyclerView nằm dưới banner -->
+    <!-- Container để load Fragment -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <!-- Thanh navigation dưới -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPlaylists"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottomNav"
-        android:layout_below="@id/imgBanner"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="-14dp"
-        android:padding="8dp" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
