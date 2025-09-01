@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
+import android.content.Intent
+import android.widget.Button
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,12 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
+// Xử lý nút Login
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
+        btnLogin.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
     private fun getSampleData(): List<String> {
         return listOf("Top Hits", "Chill Vibes", "Workout Mix", "Love Songs", "Vietnamese Hits")
