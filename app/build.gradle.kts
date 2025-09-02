@@ -42,7 +42,10 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 // Glide (load ảnh coverImage)
     implementation("com.github.bumptech.glide:glide:4.16.0")
-
+//EXOPLAYER
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+// ExoPlayer (Media3)
 //    others
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

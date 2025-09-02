@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +17,7 @@ class HomeFragment : Fragment() {
     private lateinit var rv: RecyclerView
     private lateinit var adapter: SongAdapter
     private lateinit var viewModel: SongViewModel
-
+    private val playerVM: com.example.musicapp.ui.player.PlayerViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,8 +30,7 @@ class HomeFragment : Fragment() {
         rv.layoutManager = LinearLayoutManager(requireContext())
 
         adapter = SongAdapter(emptyList()) { song ->
-            // Khi click 1 bài: tạm Toast, sau này mở DetailActivity/Fragment
-            Toast.makeText(requireContext(), "Click: ${song.artist} ", Toast.LENGTH_SHORT).show()
+            playerVM.play(song)
         }
         rv.adapter = adapter
 
