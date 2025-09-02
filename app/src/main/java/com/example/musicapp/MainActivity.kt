@@ -17,7 +17,13 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, HomeFragment())
             .commit()
+//        Xu ly mini player
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.miniPlayerContainer, com.example.musicapp.ui.player.MiniPlayerFragment())
+            .commit()
 
+
+//        Xu ly Bottom Navigation
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
