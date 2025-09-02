@@ -27,19 +27,25 @@ class SongAdapter(
         return SongVH(view)
     }
     override fun onBindViewHolder(holder: SongVH, position: Int) {
-        val song = items[position]
-        holder.txtTitle.text = song.title
-        holder.txtArtist.text = song.artist.fullName
-        Log.d("SongAdapter", "cover url = ${song.coverImage}")
-        // Load ảnh cover
-        Glide.with(holder.itemView)
-            .load(song.coverImage)
-            .placeholder(R.mipmap.ic_launcher)
-            .error(R.drawable.img_error) // Use a custom error image
-            .into(holder.imgCover)
-        Log.d("SongAdapter", "cover url = '${song.coverImage}'")
+        try {
+            val song = items[position]
+            holder.txtTitle.text = song.title
+            holder.txtArtist.text = song.artist.fullName
+            Log.d("SongAdapter", "cover url = ${song.coverImage}")
+            // Load ảnh cover
+            Glide.with(holder.itemView)
+                .load(song.coverImage)
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.drawable.img_error) // Use a custom error image
+                .into(holder.imgCover)
+            Log.d("SongAdapter", "cover url = '${song.coverImage}'")
 
-        holder.itemView.setOnClickListener { onClick(song) }
+            holder.itemView.setOnClickListener { onClick(song) }
+        }
+        catch (e : Exception) {
+            Log.e("SongAdapter", "Error binding view holder", e)
+        }
+
     }
 
     override fun getItemCount() = items.size
