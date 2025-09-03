@@ -47,10 +47,13 @@ class MiniPlayerFragment : Fragment() {
 
         // 2) Đổi icon theo trạng thái play/pause
         playerVM.isPlaying.observe(viewLifecycleOwner) { playing ->
-            btnToggle.setImageResource(
-                if (playing) android.R.drawable.ic_media_pause
-                else android.R.drawable.ic_media_play
-            )
+            if (playing) {
+                // Đang phát nhạc, hiển thị icon pause của bạn
+                btnToggle.setImageResource(R.drawable.ic_pause) // Sử dụng R.drawable.ic_pause của bạn
+            } else {
+                // Đang dừng, hiển thị icon play của bạn
+                btnToggle.setImageResource(R.drawable.ic_play)  // Sử dụng R.drawable.ic_play của bạn
+            }
         }
 
         // 3) Nhấn play/pause
