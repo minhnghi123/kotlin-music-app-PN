@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 //    how to use buildConfig
-    private const val BASE_URL = "https://api-be-music-2.onrender.com/"
+    private const val BASE_URL = "http://10.0.2.2:3000/"
     private val logging by lazy {
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
     }
@@ -22,5 +22,5 @@ object ApiClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)
-    }
+    }1
 }
