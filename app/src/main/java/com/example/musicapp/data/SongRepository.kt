@@ -1,7 +1,7 @@
 package com.example.musicapp.data
 
-import com.example.musicapp.models.ApiListResponse
-import com.example.musicapp.models.Song
+import com.example.musicapp.models.songs.ApiListResponse
+import com.example.musicapp.models.songs.Song
 import com.example.musicapp.network.ApiClient
 import retrofit2.Call
 import retrofit2.Callback

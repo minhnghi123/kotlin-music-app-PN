@@ -1,13 +1,26 @@
 package com.example.musicapp.network
 
-import com.example.musicapp.models.ApiListResponse
-import com.example.musicapp.models.Song
-import com.example.musicapp.models.SongResponse
+import com.example.musicapp.models.auth.ApiResponse
+import com.example.musicapp.models.auth.LoginRequest
+import com.example.musicapp.models.auth.SignUpRequest
+import com.example.musicapp.models.songs.ApiListResponse
+import com.example.musicapp.models.songs.Song
+import com.example.musicapp.models.songs.SongResponse
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
+//    authentication
+    @POST("auth/sign-up")
+    fun signUp(@Body request: SignUpRequest): Call<ApiResponse>
+
+    @POST("auth/login")
+    fun login(@Body request: LoginRequest): Call<ApiResponse>
+
+
 //    Lay tat ca bai hat
     @GET("/music/songs")
     fun getSongs():Call<ApiListResponse<Song>>
