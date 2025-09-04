@@ -1,4 +1,4 @@
-package com.example.musicapp.models
+package com.example.musicapp.models.songs
 //tao 1 class response
 // data class la class chi chua du lieu
 // T la kieu du lieu dong

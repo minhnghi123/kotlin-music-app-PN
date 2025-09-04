@@ -1,4 +1,4 @@
-package com.example.musicapp.models
+package com.example.musicapp.models.songs
 data class Artist(
     val id: String,
     val fullName: String
