@@ -6,6 +6,7 @@ import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import android.widget.Toast
@@ -20,8 +21,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        val username: TextView =  findViewById(R.id.et_email_login) ;
-        val password: TextView = findViewById(R.id.et_password_login) ;
+        val username: EditText =  findViewById(R.id.et_email_login) ;
+        val password: EditText  = findViewById(R.id.et_password_login) ;
         val btnLogin: Button   =  findViewById(R.id.btn_login) ;
         val tvGoToRegister: TextView = findViewById(R.id.tv_go_to_register)
 //Xu ly su kien khi click vao nut login
@@ -36,6 +37,9 @@ class LoginActivity : AppCompatActivity() {
                         val body = response.body()
                         Toast.makeText(this@LoginActivity, body?.message, Toast.LENGTH_SHORT).show()
                         // TODO: lưu token/cookie vào SharedPreferences
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java) ;
+                        startActivity(intent) ;
+                        finish()
                     } else {
                         Toast.makeText(this@LoginActivity, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show()
                     }

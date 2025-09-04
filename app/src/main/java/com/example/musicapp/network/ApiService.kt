@@ -19,12 +19,16 @@ interface ApiService {
 
     @POST("auth/login")
     fun login(@Body request: LoginRequest): Call<ApiResponse>
+    @POST("auth/logout")
+    fun logout(): Call<ApiResponse>
 
 
-//    Lay tat ca bai hat
+
+    //    Lay tat ca bai hat
     @GET("/music/songs")
     fun getSongs():Call<ApiListResponse<Song>>
 //    Lay chi tiet 1 bai hat
     @GET("/music/songs/{id}")
     fun getSongDetail(@Path("id") id:String): Call<SongResponse>
+
 }
