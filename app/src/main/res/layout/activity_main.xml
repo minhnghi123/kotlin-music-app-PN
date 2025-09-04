@@ -48,15 +48,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/imgBanner"
-        android:layout_above="@id/bottomNav"/>
+        android:layout_above="@id/miniPlayerContainer"/>
+
+    <!-- Mini Player -->
+    <FrameLayout
+        android:id="@+id/miniPlayerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_above="@id/bottomNav"
+        android:visibility="visible"
+        android:background="@color/white" />
 
     <!-- Thanh navigation dưới -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
+        style="@style/CustomBottomNavStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-10dp"
-        app:menu="@menu/bottom_menu" />
+        android:background="@drawable/bg_bottom_nav"
+        app:menu="@menu/bottom_menu"
+        app:itemTextColor="@color/nav_item_color"
+        app:itemIconTint="@color/nav_item_color"
+        app:labelVisibilityMode="labeled"
+        android:elevation="8dp" />
 
 </RelativeLayout>
