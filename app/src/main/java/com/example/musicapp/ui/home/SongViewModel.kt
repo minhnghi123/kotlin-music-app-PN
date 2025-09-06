@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.musicapp.data.SongRepository
-import com.example.musicapp.models.Song
+import com.example.musicapp.models.songs.Song
 
 class SongViewModel : ViewModel() {
     private val repo = SongRepository()

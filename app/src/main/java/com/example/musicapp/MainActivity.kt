@@ -8,12 +8,20 @@ import com.example.musicapp.ui.player.MiniPlayerFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.content.Intent
 import android.widget.Button
+
 import androidx.fragment.app.Fragment
 import com.example.musicapp.ui.search.SearchFragment
 import android.view.View
 import androidx.activity.viewModels
 import com.example.musicapp.models.Song
 import com.example.musicapp.ui.player.PlayerViewModel
+
+import android.widget.Toast
+import com.example.musicapp.models.auth.ApiResponse
+import com.example.musicapp.network.ApiClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private val playerVM: PlayerViewModel by viewModels()
@@ -64,11 +72,39 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Xử lý nút Login
+
+
+        // Xử lý nút Login / Logout
+
         val btnLogin = findViewById<Button>(R.id.btnLogin)
+        // Khi mở app, set text phù hợp
+        if (ApiClient.cookieManager?.getCookie() != null) {
+            btnLogin.text = "Đăng xuất"
+        } else {
+            btnLogin.text = "Đăng nhập"
+        }
+        Toast.makeText(this@MainActivity, " ${ApiClient.cookieManager?.getCookie().toString()}", Toast.LENGTH_SHORT).show()
         btnLogin.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            if (ApiClient.cookieManager?.getCookie() != null) {
+                // Đã login -> logout
+                ApiClient.api.logout().enqueue(object : Callback<ApiResponse> {
+                    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                        if (response.isSuccessful) {
+                            Toast.makeText(this@MainActivity, "Đăng xuất thành công!", Toast.LENGTH_SHORT).show()
+                            ApiClient.cookieManager?.clearCookie()
+                            btnLogin.text = "Đăng nhập"
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                        Toast.makeText(this@MainActivity, "Lỗi: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            } else {
+                // Chưa login -> mở LoginActivity
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

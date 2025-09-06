@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicapp.MainActivity
 import com.example.musicapp.R
-import com.example.musicapp.models.Song
+import com.example.musicapp.models.songs.Song
 
 class SongAdapter(
     private var items: List<Song> ,
