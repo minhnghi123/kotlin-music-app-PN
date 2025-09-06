@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.musicapp.MainActivity
 import com.example.musicapp.R
 import com.example.musicapp.models.Song
 
@@ -40,7 +41,8 @@ class SongAdapter(
                 .into(holder.imgCover)
             Log.d("SongAdapter", "cover url = '${song.coverImage}'")
 
-            holder.itemView.setOnClickListener { onClick(song) }
+            holder.itemView.setOnClickListener {     (holder.itemView.context as? MainActivity)?.showMiniPlayer(song)
+            }
         }
         catch (e : Exception) {
             Log.e("SongAdapter", "Error binding view holder", e)
@@ -51,6 +53,10 @@ class SongAdapter(
     override fun getItemCount() = items.size
     @SuppressLint("NotifyDataSetChanged")
     fun submit(newItems: List<Song>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
+    fun updateData(newItems: List<Song>) {
         items = newItems
         notifyDataSetChanged()
     }
