@@ -63,5 +63,6 @@ class MiniPlayerFragment : Fragment() {
         view.setOnClickListener {
             // TODO: startActivity(PlayerActivity) nếu bạn muốn
         }
+
     }
 }

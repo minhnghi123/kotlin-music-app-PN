@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <AutoCompleteTextView
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tìm bài hát, nghệ sĩ, album..."
+        android:drawableStart="@drawable/ic_search"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:singleLine="true"
+        android:padding="12dp"
+        android:background="@drawable/bg_search"
+        android:layout_marginTop="35dp"/>
+
+
+    <Spinner
+        android:id="@+id/spinnerFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvNoResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Không có kết quả tìm kiếm"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:padding="16dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"/>
+</LinearLayout>
