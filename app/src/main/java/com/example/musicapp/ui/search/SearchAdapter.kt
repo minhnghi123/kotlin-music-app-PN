@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
-import com.example.musicapp.models.Song
+import com.example.musicapp.models.songs.Song
 
 class SearchAdapter(
     private var items: List<Song>,

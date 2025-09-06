@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import com.example.musicapp.ui.search.SearchFragment
 import android.view.View
 import androidx.activity.viewModels
-import com.example.musicapp.models.Song
+import com.example.musicapp.models.songs.Song
 import com.example.musicapp.ui.player.PlayerViewModel
 
 import android.widget.Toast

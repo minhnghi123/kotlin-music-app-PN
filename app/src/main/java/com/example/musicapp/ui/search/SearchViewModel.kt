@@ -3,13 +3,12 @@ package com.example.musicapp.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.musicapp.models.Song
+import com.example.musicapp.models.songs.Song
 import com.example.musicapp.network.ApiClient
-import com.example.musicapp.models.ApiListResponse
+import com.example.musicapp.models.songs.ApiListResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 class SearchViewModel : ViewModel() {
     private val _songs = MutableLiveData<List<Song>>()
     val songs: LiveData<List<Song>> get() = _songs

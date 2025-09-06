@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
-import com.example.musicapp.models.Song
+import com.example.musicapp.models.songs.Song
 import com.example.musicapp.ui.home.SongAdapter
 import com.example.musicapp.ui.home.SongViewModel
 
