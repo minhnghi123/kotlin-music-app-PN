@@ -4,52 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Thanh tiêu đề: Music App bên trái, Login bên phải -->
-
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="49dp"
-        android:padding="16dp"
-        android:text="PN Music"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <!-- Banner dưới thanh tiêu đề -->
-
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="120dp"
-        android:layout_height="48dp"
-        android:layout_alignTop="@id/tvTitle"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="22dp"
-        android:text="Đăng nhập"
-        app:backgroundTint="@null"
-        android:background="@drawable/btn_gradient"/>
-
-    <ImageView
-        android:id="@+id/imgBanner"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_backgrround"
-        android:layout_below="@id/tvTitle" />
-
-    <!-- Container để load Fragment -->
+    <!-- Chứa toàn bộ fragment -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/imgBanner"
         android:layout_above="@id/miniPlayerContainer"/>
-
     <!-- Mini Player -->
     <FrameLayout
         android:id="@+id/miniPlayerContainer"

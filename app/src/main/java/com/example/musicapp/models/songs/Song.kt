@@ -1,8 +1,7 @@
 package com.example.musicapp.models.songs
-data class Artist(
-    val id: String,
-    val fullName: String
-)
+
+import com.example.musicapp.models.artists.Artist
+
 data class Song(
     val _id: String,
     val title: String,
