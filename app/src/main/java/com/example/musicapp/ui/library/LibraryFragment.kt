@@ -5,56 +5,82 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.musicapp.R
+import com.example.musicapp.models.users.UserResponse
+import com.example.musicapp.network.ApiClient
+import com.example.musicapp.ui.artist.ArtistAdapter
+import com.example.musicapp.ui.home.SongAdapter
+import com.example.musicapp.ui.playlists.PlaylistAdapter
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Callback
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LibraryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LibraryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var ivAvatar: ImageView
+    private lateinit var tvUsername: TextView
+    private lateinit var tvEmail: TextView
+    private lateinit var rvPlaylists: RecyclerView
+    private lateinit var rvSongs: RecyclerView
+    private lateinit var rvArtists: RecyclerView
+    private lateinit var btnLogout: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_library, container, false)
+        val view = inflater.inflate(R.layout.fragment_library, container, false)
+
+        ivAvatar = view.findViewById(R.id.ivAvatar)
+        tvUsername = view.findViewById(R.id.tvUsername)
+        tvEmail = view.findViewById(R.id.tvEmail)
+        rvPlaylists = view.findViewById(R.id.rvPlaylists)
+        rvSongs = view.findViewById(R.id.rvSongs)
+        rvArtists = view.findViewById(R.id.rvArtists)
+        btnLogout = view.findViewById(R.id.btnLogout)
+
+        // setup RecyclerView horizontal
+        rvPlaylists.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        rvSongs.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        rvArtists.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        fetchUserData()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LibraryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LibraryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchUserData() {
+        ApiClient.api.getUserProfile().enqueue(object : Callback<UserResponse> {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val user = response.body()!!.data
+
+                    // Gán thông tin cơ bản
+                    tvUsername.text = user.username
+                    tvEmail.text = user.email
+                    Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
+
+                    // Gán danh sách playlist, songs, artists
+                    rvPlaylists.adapter = PlaylistAdapter(user.playlist)
+                    rvSongs.adapter = SongAdapter(user.follow_songs)
+                    rvArtists.adapter = ArtistAdapter(user.follow_artists)
+
+                } else {
+                    Toast.makeText(requireContext(), "Lỗi load dữ liệu", Toast.LENGTH_SHORT).show()
                 }
             }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                Toast.makeText(requireContext(), "API lỗi: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

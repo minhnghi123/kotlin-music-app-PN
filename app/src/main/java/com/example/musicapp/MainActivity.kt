@@ -13,6 +13,7 @@ import com.example.musicapp.models.songs.Song
 import com.example.musicapp.network.ApiClient
 import com.example.musicapp.ui.auth.LoginFragment
 import com.example.musicapp.ui.home.HomeFragment
+import com.example.musicapp.ui.library.LibraryFragment
 import com.example.musicapp.ui.player.MiniPlayerFragment
 import com.example.musicapp.ui.player.PlayerViewModel
 import com.example.musicapp.ui.search.SearchFragment
@@ -69,8 +70,10 @@ class MainActivity : AppCompatActivity() {
             applyUiFor(current)
         }
 
-        // Load HomeFragment mặc định
-        loadFragment(HomeFragment())
+        if (savedInstanceState == null) {
+            loadFragment(HomeFragment(), "HOME")
+        }
+
 
         // Load MiniPlayerFragment mặc định
         supportFragmentManager.beginTransaction()
@@ -92,24 +95,29 @@ class MainActivity : AppCompatActivity() {
     /**
      * Hàm load fragment vào container chính
      */
-    private fun loadFragment(fragment: Fragment, addToBackStack: Boolean = false) {
-        applyUiFor(fragment)
+    private fun loadFragment(fragment: Fragment, tag: String, addToBackStack: Boolean = false) {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if (currentFragment != null && currentFragment::class == fragment::class) {
+            return
+        }
 
         val transaction = supportFragmentManager.beginTransaction()
             .setCustomAnimations(
-                R.anim.slide_in_right,  // Khi mở fragment mới
-                R.anim.slide_out_left,  // Fragment cũ trượt ra
-                R.anim.slide_in_left,   // Khi back
-                R.anim.slide_out_right  // Khi back
+                R.anim.slide_in_right,  // giống Activity mở mới
+                R.anim.slide_out_left,
+                R.anim.slide_in_left,   // khi back
+                R.anim.slide_out_right
             )
-            .replace(R.id.fragmentContainer, fragment)
+            .replace(R.id.fragmentContainer, fragment, tag)
 
         if (addToBackStack) {
-            transaction.addToBackStack(null)
+            transaction.addToBackStack(tag)
         }
 
         transaction.commit()
     }
+
+
 
 
     /**
@@ -121,15 +129,22 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> {
                     toggleHomeUI(true)
-                    loadFragment(HomeFragment());
+                    loadFragment(HomeFragment(), "HOME")
                     true
                 }
-                R.id.nav_search -> { loadFragment(SearchFragment()); true }
-                R.id.nav_library -> { /* TODO */ true }
+                R.id.nav_search -> {
+                    loadFragment(SearchFragment(), "SEARCH", addToBackStack = true)
+                    true
+                }
+                R.id.nav_library -> {
+                    loadFragment(LibraryFragment(), "LIBRARY", addToBackStack = true)
+                    true
+                }
                 else -> false
             }
         }
     }
+
 
     /**
      * Ẩn/Hiện UI ở Home (banner, title, nút login)

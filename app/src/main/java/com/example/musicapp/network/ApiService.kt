@@ -6,6 +6,7 @@ import com.example.musicapp.models.auth.SignUpRequest
 import com.example.musicapp.models.songs.ApiListResponse
 import com.example.musicapp.models.songs.Song
 import com.example.musicapp.models.songs.SongResponse
+import com.example.musicapp.models.users.UserResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,13 +23,18 @@ interface ApiService {
     @POST("auth/logout")
     fun logout(): Call<ApiResponse>
 
+// Lay thong tin cua minh
+    @GET("user/me")
+    fun getUserProfile(): Call<UserResponse>
 
-
-    //    Lay tat ca bai hat
+//    Lay tat ca bai hat
     @GET("/music/songs")
     fun getSongs():Call<ApiListResponse<Song>>
 //    Lay chi tiet 1 bai hat
     @GET("/music/songs/{id}")
     fun getSongDetail(@Path("id") id:String): Call<SongResponse>
+
+
+
 
 }
