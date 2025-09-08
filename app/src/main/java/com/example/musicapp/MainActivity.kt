@@ -13,6 +13,7 @@ import com.example.musicapp.models.songs.Song
 import com.example.musicapp.network.ApiClient
 import com.example.musicapp.ui.auth.LoginFragment
 import com.example.musicapp.ui.home.HomeFragment
+import com.example.musicapp.ui.library.LibraryFragment
 import com.example.musicapp.ui.player.MiniPlayerFragment
 import com.example.musicapp.ui.player.PlayerViewModel
 import com.example.musicapp.ui.search.SearchFragment
@@ -48,6 +49,13 @@ class MainActivity : AppCompatActivity() {
             }
             is SearchFragment -> {
                 // Màn hình Search: ẩn UI Home, giữ bottom nav
+                title.visibility = View.GONE
+                btn.visibility = View.GONE
+                banner.visibility = View.GONE
+                bottom.visibility = View.VISIBLE
+            }
+            is LibraryFragment -> {
+                // Màn hình Library: ẩn UI Home, giữ bottom nav
                 title.visibility = View.GONE
                 btn.visibility = View.GONE
                 banner.visibility = View.GONE
@@ -125,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_search -> { loadFragment(SearchFragment()); true }
-                R.id.nav_library -> { /* TODO */ true }
+                R.id.nav_library -> { loadFragment(LibraryFragment()); true }
                 else -> false
             }
         }

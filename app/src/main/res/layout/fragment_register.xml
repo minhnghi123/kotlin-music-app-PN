@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="24dp"
-    tools:context=".ui.auth.SignUpActivity">
+    android:padding="24dp">
 
     <ImageView
         android:id="@+id/img_logo_register"

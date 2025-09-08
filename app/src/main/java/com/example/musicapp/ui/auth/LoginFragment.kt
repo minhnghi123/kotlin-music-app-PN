@@ -17,7 +17,6 @@ import com.example.musicapp.network.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 class LoginFragment : Fragment() {
 
     override fun onCreateView(
@@ -48,12 +47,14 @@ class LoginFragment : Fragment() {
 
                         (activity as? MainActivity)?.onLoginSuccess()
                     } else {
-                        Toast.makeText(requireContext(), "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Đăng nhập thất bại!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
 
                 override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Lỗi mạng: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Lỗi mạng: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
         }
