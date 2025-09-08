@@ -31,7 +31,7 @@ object ApiClient {
         }
         chain.proceed(requestBuilder.build())
     }
-    private val logging by lazy {
+    private  val logging by lazy {
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
     }
     private val okHttp by lazy {
