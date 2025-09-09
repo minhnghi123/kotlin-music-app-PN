@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Avatar -->
+    <ImageView
+        android:id="@+id/ivAvatarPreview"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher_round"
+        android:background="@drawable/circle_bg"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên người dùng"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/etAvatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Link avatar (URL)"
+        android:inputType="textUri"/>
+</LinearLayout>

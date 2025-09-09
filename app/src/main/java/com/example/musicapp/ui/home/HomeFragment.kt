@@ -111,4 +111,5 @@ class HomeFragment : Fragment() {
     private fun updateLoginButtonText() {
         btnLogin?.text = if (ApiClient.cookieManager?.getCookie() != null) "Đăng xuất" else "Đăng nhập"
     }
+
 }

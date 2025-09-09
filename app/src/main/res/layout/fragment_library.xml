@@ -1,104 +1,122 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
-
-    <LinearLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- Avatar + Info -->
-        <ImageView
-            android:id="@+id/ivAvatar"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@mipmap/ic_launcher_round"
-            android:scaleType="centerCrop"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/circle_bg"/>
-
-        <TextView
-            android:id="@+id/tvUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"/>
-
-        <TextView
-            android:id="@+id/tvEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:textSize="16sp"
-            android:textColor="#666"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"/>
-
-        <!-- Playlist Section -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="My Playlists"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPlaylists"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:overScrollMode="never"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp">
 
-        <!-- Followed Songs Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Liked Songs"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"/>
+                <ImageView
+                    android:id="@+id/ivAvatar"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@mipmap/ic_launcher_round"
+                    android:scaleType="centerCrop"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/circle_bg"/>
+            </RelativeLayout>
+<!--            Username-->
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"/>
+            <!--Email-->
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textSize="16sp"
+                android:textColor="#666"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"/>
+            <!-- Nút chỉnh sửa -->
+            <Button
+                android:id="@+id/btnEditProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chi tiết thông tin cá nhân"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#FF5500"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSongs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:overScrollMode="never"/>
 
-        <!-- Followed Artists Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Followed Artists"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"/>
+            <!-- Playlist Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My Playlists"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvArtists"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:overScrollMode="never"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPlaylists"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:overScrollMode="never"/>
 
-        <!-- Logout -->
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Log out"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="#FF5722"
-            android:textColor="@android:color/white"/>
+            <!-- Followed Songs Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Liked Songs"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
 
-    </LinearLayout>
-</ScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSongs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:overScrollMode="never"/>
+
+            <!-- Followed Artists Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Followed Artists"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvArtists"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:overScrollMode="never"/>
+
+            <!-- Logout -->
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Log out"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="#FF5722"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+    </ScrollView>

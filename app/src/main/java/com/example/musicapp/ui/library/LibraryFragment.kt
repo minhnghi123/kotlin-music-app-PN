@@ -31,7 +31,7 @@ class LibraryFragment : Fragment() {
     private lateinit var rvSongs: RecyclerView
     private lateinit var rvArtists: RecyclerView
     private lateinit var btnLogout: Button
-
+    private lateinit var  btnEditProfile: Button
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,7 +45,7 @@ class LibraryFragment : Fragment() {
         rvSongs = view.findViewById(R.id.rvSongs)
         rvArtists = view.findViewById(R.id.rvArtists)
         btnLogout = view.findViewById(R.id.btnLogout)
-
+        btnEditProfile = view.findViewById(R.id.btnEditProfile)
         // setup RecyclerView horizontal
         rvPlaylists.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -53,7 +53,13 @@ class LibraryFragment : Fragment() {
         rvArtists.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         fetchUserData()
-
+//        click sự kiện chi tiết
+        btnEditProfile.setOnClickListener {
+            parentFragmentManager.beginTransaction().replace(R.id.fragmentContainer,
+                ProfileDetailFragment())
+                .addToBackStack("PROFILE_DETAIL")
+                .commit()
+        }
         return view
     }
 

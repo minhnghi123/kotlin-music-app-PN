@@ -92,9 +92,6 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-
-
-
     /**
      * Setup bottom navigation (Home - Search - Library)
      */
@@ -133,7 +130,6 @@ class MainActivity : AppCompatActivity() {
     fun onLoginSuccess() {
         // về lại màn trước (thường là Home)
         supportFragmentManager.popBackStack()
-        // applyUiFor sẽ chạy lại nhờ listener, không cần ẩn/hiện thủ công
-        findViewById<Button>(R.id.btnLogin).text = "Đăng xuất"
     }
+
 }
