@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -32,8 +33,8 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     val player: ExoPlayer = ExoPlayer.Builder(app).build().apply {
         setAudioAttributes(
             AudioAttributes.Builder()
-                .setContentType(androidx.media3.common.C.AUDIO_CONTENT_TYPE_MUSIC)
-                .setUsage(androidx.media3.common.C.USAGE_MEDIA)
+                .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                .setUsage(C.USAGE_MEDIA)
                 .build(),
             true
         )
@@ -42,6 +43,11 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
                 _isPlaying.postValue(isPlaying)
             }
         })
+    }
+
+    init {
+        // Gán player này cho PlayerHolder
+        PlayerHolder.player = player
     }
 
     fun play(song: Song) {

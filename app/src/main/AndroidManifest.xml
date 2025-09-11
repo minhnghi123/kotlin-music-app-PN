@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 <!--    Cho phep truy cap internet-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <application
         android:name=".Default"
         android:allowBackup="true"
@@ -24,7 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".receiver.MusicControlReceiver" />
+        <service
+            android:name=".receiver.MusicService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
     </application>
-
 
 </manifest>
