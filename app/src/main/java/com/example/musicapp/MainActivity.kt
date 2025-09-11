@@ -1,15 +1,19 @@
 package com.example.musicapp
 
+import android.content.Intent
+import com.example.musicapp.receiver.MusicActions
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.musicapp.models.auth.ApiResponse
 import com.example.musicapp.models.songs.Song
 import com.example.musicapp.network.ApiClient
+import com.example.musicapp.receiver.MusicService
 import com.example.musicapp.ui.auth.LoginFragment
 import com.example.musicapp.ui.home.HomeFragment
 import com.example.musicapp.ui.library.LibraryFragment
@@ -116,12 +120,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     /**
      * Hàm public cho Adapter/Fragment gọi để phát nhạc
      */
     fun showMiniPlayer(song: Song) {
-        playerVM.play(song)  // gọi ExoPlayer phát nhạc
+        playerVM.play(song)
+        val intent = Intent(this, MusicService::class.java).apply {
+            action = MusicActions.ACTION_PLAY
+            putExtra("SONG_TITLE", song.title)
+            putExtra("SONG_ARTIST", song.artist.fullName)
+            putExtra("SONG_URL", song.fileUrl)
+        }
+        ContextCompat.startForegroundService(this, intent)
     }
 
     /**
