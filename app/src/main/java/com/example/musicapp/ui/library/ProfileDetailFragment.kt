@@ -93,6 +93,11 @@ class ProfileDetailFragment : Fragment() {
         btnEditProfile.setOnClickListener {
             showEditProfileDialog()
         }
+        // Xử lý khi bấm nút "Đổi mật khẩu"
+        btnChangePassword.setOnClickListener {
+            showChangePasswordDialog()
+        }
+
 
         return view
     }
@@ -134,6 +139,37 @@ private fun showEditProfileDialog() {
         .show()
 
 
+}
+//show pop up doi mat khau
+private fun showChangePasswordDialog() {
+    val dialogView = LayoutInflater.from(requireContext())
+        .inflate(R.layout.dialog_change_password, null)
+
+    val etOldPassword = dialogView.findViewById<EditText>(R.id.etOldPassword)
+    val etNewPassword = dialogView.findViewById<EditText>(R.id.etNewPassword)
+    val etReNewPassword = dialogView.findViewById<EditText>(R.id.etReNewPassword)
+
+    AlertDialog.Builder(requireContext())
+        .setTitle("Đổi mật khẩu")
+        .setView(dialogView)
+        .setPositiveButton("Lưu") { _, _ ->
+            val oldPass = etOldPassword.text.toString().trim()
+            val newPass = etNewPassword.text.toString().trim()
+            val reNewPass = etReNewPassword.text.toString().trim()
+
+            if (oldPass.isEmpty() || newPass.isEmpty() || reNewPass.isEmpty()) {
+                Toast.makeText(requireContext(), "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+            if (newPass != reNewPass) {
+                Toast.makeText(requireContext(), "Mật khẩu nhập lại không khớp", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+            // Gọi API
+            changePassword(oldPass, newPass, reNewPass)
+        }
+        .setNegativeButton("Hủy", null)
+        .show()
 }
 
     //    Fetch Data
