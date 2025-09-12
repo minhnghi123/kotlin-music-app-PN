@@ -31,10 +31,4 @@
         android:inputType="textEmailAddress"
         android:layout_marginBottom="12dp"/>
 
-    <EditText
-        android:id="@+id/etAvatar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Link avatar (URL)"
-        android:inputType="textUri"/>
 </LinearLayout>
