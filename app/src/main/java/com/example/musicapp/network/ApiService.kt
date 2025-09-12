@@ -9,11 +9,15 @@ import com.example.musicapp.models.songs.SongResponse
 import com.example.musicapp.models.users.ChangePasswordRequest
 import com.example.musicapp.models.users.UpdateMeRequest
 import com.example.musicapp.models.users.UserResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface ApiService {
@@ -29,8 +33,14 @@ interface ApiService {
 // Lay thong tin cua minh
     @GET("user/me")
     fun getUserProfile(): Call<UserResponse>
+//Phai co multipart de upload file
+    @Multipart
     @PUT("user/me")
-    fun updateMe(@Body request: UpdateMeRequest): Call<UserResponse>
+    fun updateMe(
+        @Part avatar: MultipartBody.Part?,
+        @Part("username") username: RequestBody,
+        @Part("email") email: RequestBody
+    ): Call<UserResponse>
 
     @PUT("user/me/change-password")
     fun changePassword(@Body request: ChangePasswordRequest): Call<UserResponse>
