@@ -19,9 +19,10 @@
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tên người dùng"
-        android:inputType="textPersonName"
-        android:layout_marginBottom="12dp"/>
+        android:enabled="false"
+        android:inputType="none"
+        android:textColor="@android:color/darker_gray"/>
+
 
     <EditText
         android:id="@+id/etEmail"
@@ -31,10 +32,4 @@
         android:inputType="textEmailAddress"
         android:layout_marginBottom="12dp"/>
 
-    <EditText
-        android:id="@+id/etAvatar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Link avatar (URL)"
-        android:inputType="textUri"/>
 </LinearLayout>

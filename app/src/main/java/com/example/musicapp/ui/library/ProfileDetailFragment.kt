@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Switch
@@ -20,10 +21,16 @@ import com.example.musicapp.models.users.ChangePasswordRequest
 import com.example.musicapp.models.users.UpdateMeRequest
 import com.example.musicapp.models.users.UserResponse
 import com.example.musicapp.network.ApiClient
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import java.io.File
+import java.io.FileOutputStream
 class ProfileDetailFragment : Fragment() {
 
     private lateinit var ivAvatar: ImageView
@@ -33,6 +40,21 @@ class ProfileDetailFragment : Fragment() {
     private lateinit var switchBiometric: Switch
     private lateinit var btnEditProfile: Button
     private lateinit var btnChangePassword: Button
+
+//Ham chuyen doi uri sang file
+    private fun uriToFile(uri: Uri): File {
+        val contentResolver = requireContext().contentResolver
+        // thử lấy mime
+        val mime = contentResolver.getType(uri) ?: "image/jpeg"
+        val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime) ?: "jpg"
+        val file = File(requireContext().cacheDir, "upload_${System.currentTimeMillis()}.$extension")
+        contentResolver.openInputStream(uri)?.use { input ->
+            FileOutputStream(file).use { output ->
+                input.copyTo(output)
+            }
+        } ?: throw IllegalArgumentException("Không đọc được uri")
+        return file
+    }
 
 //Avatar Picker + Preview
     private var selectedAvatarUri: Uri? = null
@@ -71,6 +93,11 @@ class ProfileDetailFragment : Fragment() {
         btnEditProfile.setOnClickListener {
             showEditProfileDialog()
         }
+        // Xử lý khi bấm nút "Đổi mật khẩu"
+        btnChangePassword.setOnClickListener {
+            showChangePasswordDialog()
+        }
+
 
         return view
     }
@@ -81,7 +108,6 @@ private fun showEditProfileDialog() {
 
     val etUsername = dialogView.findViewById<EditText>(R.id.etUsername)
     val etEmail = dialogView.findViewById<EditText>(R.id.etEmail)
-    val etAvatar = dialogView.findViewById<EditText>(R.id.etAvatar)
     val ivPreview = dialogView.findViewById<ImageView>(R.id.ivAvatarPreview)
 
     // Lưu tham chiếu để update khi chọn ảnh
@@ -106,14 +132,41 @@ private fun showEditProfileDialog() {
             val newUsername = etUsername.text.toString().trim()
             val newEmail = etEmail.text.toString().trim()
 
-            // Nếu user chọn ảnh mới → dùng URI, ngược lại dùng link nhập tay
-            val newAvatar = if (selectedAvatarUri != null) {
-                selectedAvatarUri.toString()
-            } else {
-                etAvatar.text.toString().trim()
-            }
+            // Gửi username, email và ảnh (nếu user có chọn)
+            updateUserProfile(newUsername, newEmail)
+        }
+        .setNegativeButton("Hủy", null)
+        .show()
 
-            updateUserProfile(newUsername, newEmail, newAvatar)
+
+}
+//show pop up doi mat khau
+private fun showChangePasswordDialog() {
+    val dialogView = LayoutInflater.from(requireContext())
+        .inflate(R.layout.dialog_change_password, null)
+
+    val etOldPassword = dialogView.findViewById<EditText>(R.id.etOldPassword)
+    val etNewPassword = dialogView.findViewById<EditText>(R.id.etNewPassword)
+    val etReNewPassword = dialogView.findViewById<EditText>(R.id.etReNewPassword)
+
+    AlertDialog.Builder(requireContext())
+        .setTitle("Đổi mật khẩu")
+        .setView(dialogView)
+        .setPositiveButton("Lưu") { _, _ ->
+            val oldPass = etOldPassword.text.toString().trim()
+            val newPass = etNewPassword.text.toString().trim()
+            val reNewPass = etReNewPassword.text.toString().trim()
+
+            if (oldPass.isEmpty() || newPass.isEmpty() || reNewPass.isEmpty()) {
+                Toast.makeText(requireContext(), "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+            if (newPass != reNewPass) {
+                Toast.makeText(requireContext(), "Mật khẩu nhập lại không khớp", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+            // Gọi API
+            changePassword(oldPass, newPass, reNewPass)
         }
         .setNegativeButton("Hủy", null)
         .show()
@@ -145,26 +198,36 @@ private fun showEditProfileDialog() {
         })
     }
     // Update Data
-    private fun updateUserProfile(username: String?, email: String?, avatar: String?) {
-        val request = UpdateMeRequest(username, email, avatar)
+    private fun updateUserProfile(username: String?, email: String?) {
+        val usernamePart = (username ?: "").toRequestBody("text/plain".toMediaTypeOrNull())
+        val emailPart = (email ?: "").toRequestBody("text/plain".toMediaTypeOrNull())
 
-        ApiClient.api.updateMe(request).enqueue(object : Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                if (response.isSuccessful && response.body()?.success == true) {
-                    val user = response.body()!!.data
-                    Toast.makeText(requireContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show()
-                    tvUsername.text = user.username
-                    tvEmail.text = user.email
-                    Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
-                } else {
-                    Toast.makeText(requireContext(), "Cập nhật thất bại", Toast.LENGTH_SHORT).show()
+        var avatarPart: MultipartBody.Part? = null
+
+        if (selectedAvatarUri != null) {
+            val file = uriToFile(selectedAvatarUri!!)
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            avatarPart = MultipartBody.Part.createFormData("avatar", file.name, requestFile)
+        }
+
+        ApiClient.api.updateMe(avatarPart, usernamePart, emailPart)
+            .enqueue(object : Callback<UserResponse> {
+                override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                    if (response.isSuccessful && response.body()?.success == true) {
+                        val user = response.body()!!.data
+                        Toast.makeText(requireContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show()
+                        tvUsername.text = user.username
+                        tvEmail.text = user.email
+                        Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
+                    } else {
+                        Toast.makeText(requireContext(), "Cập nhật thất bại", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "API lỗi: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "API lỗi: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     // Change Password
