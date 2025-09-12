@@ -29,19 +29,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun applyUiFor(fragment: Fragment?) {
         val bottom = findViewById<BottomNavigationView>(R.id.bottomNav)
-
+        val miniPlayer = findViewById<View>(R.id.miniPlayerContainer)
         when (fragment) {
             is HomeFragment -> {
                 bottom.visibility = View.VISIBLE
+                miniPlayer?.visibility = View.VISIBLE
             }
             is LoginFragment, is com.example.musicapp.ui.auth.RegisterFragment -> {
                 bottom.visibility = View.GONE
+                miniPlayer?.visibility = View.GONE
             }
             is SearchFragment -> {
                 bottom.visibility = View.VISIBLE
+                miniPlayer?.visibility = View.VISIBLE
             }
             else -> {
                 bottom.visibility = View.VISIBLE
+                miniPlayer?.visibility = View.VISIBLE
             }
         }
     }
