@@ -15,13 +15,14 @@ import com.example.musicapp.models.songs.Song
 import com.example.musicapp.network.ApiClient
 import com.example.musicapp.receiver.MusicService
 import com.example.musicapp.ui.auth.LoginFragment
+import com.example.musicapp.ui.auth.RegisterFragment
 import com.example.musicapp.ui.home.HomeFragment
 import com.example.musicapp.ui.library.LibraryFragment
 import com.example.musicapp.ui.player.MiniPlayerFragment
 import com.example.musicapp.ui.player.PlayerViewModel
 import com.example.musicapp.ui.search.SearchFragment
+import com.example.musicapp.utils.PreferenceHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,24 +34,21 @@ class MainActivity : AppCompatActivity() {
         when (fragment) {
             is HomeFragment -> {
                 bottom.visibility = View.VISIBLE
-                miniPlayer?.visibility = View.VISIBLE
             }
             is LoginFragment, is com.example.musicapp.ui.auth.RegisterFragment -> {
                 bottom.visibility = View.GONE
-                miniPlayer?.visibility = View.GONE
             }
             is SearchFragment -> {
                 bottom.visibility = View.VISIBLE
-                miniPlayer?.visibility = View.VISIBLE
             }
             else -> {
                 bottom.visibility = View.VISIBLE
-                miniPlayer?.visibility = View.VISIBLE
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        PreferenceHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
@@ -68,10 +66,13 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         playerVM.currentSong.observe(this) { song ->
-            findViewById<View>(R.id.miniPlayerContainer).visibility =
-                if (song != null) View.VISIBLE else View.GONE
-        }
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+            val isAuthFragment = currentFragment is LoginFragment || currentFragment is RegisterFragment
 
+            val miniPlayer = findViewById<View>(R.id.miniPlayerContainer)
+            miniPlayer.visibility =
+                if (song != null && !isAuthFragment) View.VISIBLE else View.GONE
+        }
         setupBottomNav()
     }
 
@@ -86,9 +87,9 @@ class MainActivity : AppCompatActivity() {
 
         val transaction = supportFragmentManager.beginTransaction()
             .setCustomAnimations(
-                R.anim.slide_in_right,  // giống Activity mở mới
+                R.anim.slide_in_right,
                 R.anim.slide_out_left,
-                R.anim.slide_in_left,   // khi back
+                R.anim.slide_in_left,
                 R.anim.slide_out_right
             )
             .replace(R.id.fragmentContainer, fragment, tag)
@@ -142,7 +143,7 @@ class MainActivity : AppCompatActivity() {
      * Hàm public để LoginFragment gọi khi đăng nhập thành công
      */
     fun onLoginSuccess() {
-        // về lại màn trước (thường là Home)
+        // về lại màn trước
         supportFragmentManager.popBackStack()
     }
 

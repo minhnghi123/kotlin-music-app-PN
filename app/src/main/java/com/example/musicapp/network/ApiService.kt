@@ -51,8 +51,4 @@ interface ApiService {
 //    Lay chi tiet 1 bai hat
     @GET("/music/songs/{id}")
     fun getSongDetail(@Path("id") id:String): Call<SongResponse>
-
-
-
-
 }
