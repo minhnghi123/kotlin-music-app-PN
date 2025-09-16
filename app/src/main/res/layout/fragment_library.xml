@@ -24,7 +24,7 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/circle_bg"/>
             </RelativeLayout>
-<!--            Username-->
+            <!--Username-->
             <TextView
                 android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
@@ -63,6 +63,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="My Playlists"
+                android:drawableStart="@drawable/ic_list"
+                android:drawablePadding="12dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
@@ -79,6 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Liked Songs"
+                android:drawableStart="@drawable/ic_favorite"
+                android:drawablePadding="12dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginTop="24dp"
@@ -92,14 +96,17 @@
                 android:overScrollMode="never"/>
 
             <!-- Followed Artists Section -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Followed Artists"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                android:text="Followed Artists"
+                android:drawableStart="@drawable/ic_album"
+                android:drawablePadding="12dp"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvArtists"
@@ -107,6 +114,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:overScrollMode="never"/>
+
+            <!-- Dark Mode Toggle -->
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp">
+
+                <Switch
+                    android:id="@+id/switchDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dark Mode"/>
+            </LinearLayout>
+
 
             <!-- Logout -->
             <Button
