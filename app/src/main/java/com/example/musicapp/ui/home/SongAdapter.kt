@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -17,10 +18,16 @@ class SongAdapter(
     private var items: List<Song> ,
     private val onClick: (Song) -> Unit ={}
 ):RecyclerView.Adapter<SongAdapter.SongVH>() {
+    private var onAddToPlaylistClick: ((Song) -> Unit)? = null
+    fun setOnAddToPlaylistClickListener(listener: (Song) -> Unit) {
+        onAddToPlaylistClick = listener
+    }
     class SongVH(itemView:View): RecyclerView.ViewHolder(itemView) {
         val imgCover: ImageView = itemView.findViewById(R.id.imgCover)
         val txtTitle: TextView = itemView.findViewById(R.id.txtTitle)
         val txtArtist: TextView = itemView.findViewById(R.id.txtArtist)
+
+        val btnMore: ImageButton = itemView.findViewById(R.id.btnMore)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongVH {
         val view = LayoutInflater.from(parent.context)
@@ -37,12 +44,28 @@ class SongAdapter(
             Glide.with(holder.itemView)
                 .load(song.coverImage)
                 .placeholder(R.mipmap.ic_launcher)
-                .error(R.drawable.img_error) // Use a custom error image
+                .error(R.drawable.img_error)
                 .into(holder.imgCover)
             Log.d("SongAdapter", "cover url = '${song.coverImage}'")
 
             holder.itemView.setOnClickListener {     (holder.itemView.context as? MainActivity)?.showMiniPlayer(song)
             }
+//            show menu khi click btnMore
+            holder.btnMore.setOnClickListener { view ->
+                val popup = android.widget.PopupMenu(view.context, view)
+                popup.inflate(R.menu.song_item_menu)
+                popup.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.action_add_playlist -> {
+                            onAddToPlaylistClick?.invoke(song)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                popup.show()
+            }
+
         }
         catch (e : Exception) {
             Log.e("SongAdapter", "Error binding view holder", e)

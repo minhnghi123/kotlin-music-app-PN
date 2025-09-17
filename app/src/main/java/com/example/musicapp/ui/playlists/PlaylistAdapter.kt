@@ -11,7 +11,8 @@ import com.example.musicapp.models.playlists.Playlist
 import com.example.musicapp.R
 class PlaylistAdapter(private val playlists: List<Playlist>) :
     RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
-
+    private var onItemClick: ((Playlist) -> Unit)? = null
+    fun setOnItemClickListener(listener: (Playlist) -> Unit) { onItemClick = listener }
     class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivCover: ImageView = itemView.findViewById(R.id.ivCover)
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
@@ -27,7 +28,14 @@ class PlaylistAdapter(private val playlists: List<Playlist>) :
         val playlist = playlists[position]
         holder.tvTitle.text = playlist.title
         Glide.with(holder.itemView.context).load(playlist.coverImage).into(holder.ivCover)
+        // Gọi callback khi click
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(playlist)
+        }
     }
 
     override fun getItemCount() = playlists.size
+
+//    show playlist
+
 }
