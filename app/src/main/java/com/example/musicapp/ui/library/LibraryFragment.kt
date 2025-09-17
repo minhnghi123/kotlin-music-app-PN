@@ -90,7 +90,7 @@ class LibraryFragment : Fragment() {
                     Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
 
                     // Gán danh sách playlist, songs, artists
-                    rvPlaylists.adapter = PlaylistAdapter(user.playlist)
+                    rvPlaylists.adapter = PlaylistAdapter(user.playlists)
                     rvSongs.adapter = SongAdapter(user.follow_songs)
                     rvArtists.adapter = ArtistAdapter(user.follow_artists)
 
@@ -104,4 +104,9 @@ class LibraryFragment : Fragment() {
             }
         })
     }
+    override fun onResume() {
+        super.onResume()
+        fetchUserData()
+    }
+
 }
