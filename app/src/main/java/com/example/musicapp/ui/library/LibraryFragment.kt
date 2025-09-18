@@ -20,6 +20,7 @@ import com.example.musicapp.network.ApiClient
 import com.example.musicapp.ui.artist.ArtistAdapter
 import com.example.musicapp.ui.home.SongAdapter
 import com.example.musicapp.ui.playlists.PlaylistAdapter
+import com.example.musicapp.ui.playlists.PlaylistDetailFragment
 import com.example.musicapp.utils.PreferenceHelper
 import retrofit2.Call
 import retrofit2.Response
@@ -90,7 +91,20 @@ class LibraryFragment : Fragment() {
                     Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
 
                     // Gán danh sách playlist, songs, artists
-                    rvPlaylists.adapter = PlaylistAdapter(user.playlist)
+                    rvPlaylists.adapter = PlaylistAdapter(user.playlists).apply {
+                        setOnItemClickListener { playlist ->
+                            val fragment = PlaylistDetailFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString("playlistId", playlist._id)
+                                }
+                            }
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainer, fragment)
+                                .addToBackStack("PLAYLIST_DETAIL")
+                                .commit()
+                        }
+                    }
+
                     rvSongs.adapter = SongAdapter(user.follow_songs)
                     rvArtists.adapter = ArtistAdapter(user.follow_artists)
 
@@ -104,4 +118,9 @@ class LibraryFragment : Fragment() {
             }
         })
     }
+    override fun onResume() {
+        super.onResume()
+        fetchUserData()
+    }
+
 }
