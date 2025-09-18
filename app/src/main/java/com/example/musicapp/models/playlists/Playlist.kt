@@ -1,5 +1,7 @@
 package com.example.musicapp.models.playlists
 
+import com.example.musicapp.models.songs.Song
+
 data class Playlist(
     val _id: String,
     val title: String,
@@ -40,4 +42,9 @@ data class AddToPlaylistResponse(
     val success: Boolean,
     val message: String,
     val songs: List<String>? = null
+)
+data class PlaylistDetailResponse(
+    val success: Boolean,
+    val songsInPlaylist: List<Song>,
+    val playlist: Playlist
 )

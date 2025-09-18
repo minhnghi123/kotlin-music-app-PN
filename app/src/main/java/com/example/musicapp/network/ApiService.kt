@@ -7,6 +7,7 @@ import com.example.musicapp.models.playlists.AddToPlaylistRequest
 import com.example.musicapp.models.playlists.AddToPlaylistResponse
 import com.example.musicapp.models.playlists.CreatePlaylistRequest
 import com.example.musicapp.models.playlists.CreatePlaylistResponse
+import com.example.musicapp.models.playlists.PlaylistDetailResponse
 import com.example.musicapp.models.playlists.PlaylistResponse
 import com.example.musicapp.models.songs.ApiListResponse
 import com.example.musicapp.models.songs.Song
@@ -68,5 +69,8 @@ interface ApiService {
 
     @PATCH("playlist/add-playlist")
     suspend fun addToPlaylist(@Body body: AddToPlaylistRequest): Response<AddToPlaylistResponse>
+
+    @GET("playlist/{id}")
+    fun getPlaylistDetail(@Path("id") playlistId: String): Call<PlaylistDetailResponse>
 
 }
