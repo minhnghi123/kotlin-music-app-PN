@@ -48,7 +48,8 @@ class SongAdapter(
                 .into(holder.imgCover)
             Log.d("SongAdapter", "cover url = '${song.coverImage}'")
 
-            holder.itemView.setOnClickListener {     (holder.itemView.context as? MainActivity)?.showMiniPlayer(song)
+            holder.itemView.setOnClickListener {
+                (holder.itemView.context as? MainActivity)?.showMiniPlayer(song)
             }
 //            show menu khi click btnMore
             holder.btnMore.setOnClickListener { view ->
