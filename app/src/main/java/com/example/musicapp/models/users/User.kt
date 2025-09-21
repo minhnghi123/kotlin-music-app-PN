@@ -9,7 +9,7 @@ data class UserData(
     val username: String,
     val email: String,
     val avatar: String,
-    val playlist: List<Playlist>,
     val follow_songs: List<Song>,
-    val follow_artists: List<Artist>
+    val follow_artists: List<Artist> ,
+    val playlists: List<Playlist>
 )

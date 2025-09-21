@@ -9,7 +9,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 //    how to use buildConfig
-    private const val BASE_URL = "https://api-be-music-2.onrender.com/" ;
+//    private const val BASE_URL = "https://api-be-music-2.onrender.com/" ;
+    private const val BASE_URL = "http://10.0.2.2:3000/" ;
     public var cookieManager: CookieManager? =null ;
     fun init(context: Context) {
         cookieManager = CookieManager(context.applicationContext)
