@@ -1,5 +1,6 @@
 package com.example.musicapp.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
 import com.example.musicapp.models.auth.ApiResponse
 import com.example.musicapp.network.ApiClient
-import com.example.musicapp.ui.auth.LoginFragment
+import com.example.musicapp.ui.auth.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -99,11 +100,9 @@ class HomeFragment : Fragment() {
                     }
                 })
             } else {
-                // Chưa login -> mở LoginFragment
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, LoginFragment())
-                    .addToBackStack(null)
-                    .commit()
+                // Chưa login -> mở LoginActivity
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                startActivity(intent)
             }
         }
     }

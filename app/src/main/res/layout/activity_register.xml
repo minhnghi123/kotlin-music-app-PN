@@ -7,7 +7,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="24dp"
-    tools:context=".ui.auth.RegisterFragment">
+    tools:context=".ui.auth.RegisterActivity">
 
     <ImageView
         android:id="@+id/img_logo_register"
