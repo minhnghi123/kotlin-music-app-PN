@@ -4,18 +4,13 @@ import android.content.Intent
 import com.example.musicapp.receiver.MusicActions
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.musicapp.models.auth.ApiResponse
 import com.example.musicapp.models.songs.Song
-import com.example.musicapp.network.ApiClient
 import com.example.musicapp.receiver.MusicService
-import com.example.musicapp.ui.auth.LoginFragment
-import com.example.musicapp.ui.auth.RegisterFragment
 import com.example.musicapp.ui.home.HomeFragment
 import com.example.musicapp.ui.library.LibraryFragment
 import com.example.musicapp.ui.player.MiniPlayerFragment
@@ -35,9 +30,6 @@ class MainActivity : AppCompatActivity() {
             is HomeFragment -> {
                 bottom.visibility = View.VISIBLE
             }
-            is LoginFragment, is com.example.musicapp.ui.auth.RegisterFragment -> {
-                bottom.visibility = View.GONE
-            }
             is SearchFragment -> {
                 bottom.visibility = View.VISIBLE
             }
@@ -52,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
         supportFragmentManager.addOnBackStackChangedListener {
             val current = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
             applyUiFor(current)
@@ -61,17 +54,18 @@ class MainActivity : AppCompatActivity() {
             loadFragment(HomeFragment(), "HOME")
         }
 
+        if (intent.getBooleanExtra("NAVIGATE_HOME", false)) {
+            loadFragment(HomeFragment(), "HOME")
+        }
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.miniPlayerContainer, MiniPlayerFragment())
             .commit()
 
         playerVM.currentSong.observe(this) { song ->
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
-            val isAuthFragment = currentFragment is LoginFragment || currentFragment is RegisterFragment
-
             val miniPlayer = findViewById<View>(R.id.miniPlayerContainer)
             miniPlayer.visibility =
-                if (song != null && !isAuthFragment) View.VISIBLE else View.GONE
+                if (song != null) View.VISIBLE else View.GONE
         }
         setupBottomNav()
     }
@@ -140,11 +134,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Hàm public để LoginFragment gọi khi đăng nhập thành công
+     * Hàm public để gọi sau khi login/register thành công
      */
-    fun onLoginSuccess() {
-        // về lại màn trước
-        supportFragmentManager.popBackStack()
+    fun onAuthSuccess() {
+        // Quay về HomeFragment
+        loadFragment(HomeFragment(), "HOME")
     }
-
 }

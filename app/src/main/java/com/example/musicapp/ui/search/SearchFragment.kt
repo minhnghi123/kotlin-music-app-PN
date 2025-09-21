@@ -103,7 +103,7 @@ class SearchFragment : Fragment() {
                 val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
                 imm.hideSoftInputFromWindow(etSearch.windowToken, 0)
 
-                true // báo là đã xử lý action
+                true
             } else {
                 false
             }
@@ -145,7 +145,6 @@ class SearchFragment : Fragment() {
                 }
             }
         })
-
         return view
     }
 

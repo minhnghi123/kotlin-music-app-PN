@@ -26,6 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.auth.LoginActivity" />
+        <activity android:name=".ui.auth.RegisterActivity" />
         <receiver android:name=".receiver.MusicControlReceiver" />
         <service
             android:name=".receiver.MusicService"
