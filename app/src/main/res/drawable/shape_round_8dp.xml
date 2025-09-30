@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Bo góc 8dp -->
+    <corners android:radius="8dp" />
+
+    <!-- Có thể thêm màu nền trong suốt (để chỉ bo ảnh) -->
+    <solid android:color="@android:color/transparent" />
+</shape>

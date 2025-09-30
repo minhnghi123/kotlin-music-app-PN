@@ -15,43 +15,60 @@ import com.example.musicapp.R
 import com.example.musicapp.models.songs.Song
 
 class SongAdapter(
-    private var items: List<Song> ,
-    private val onClick: (Song) -> Unit ={}
-):RecyclerView.Adapter<SongAdapter.SongVH>() {
+    private var items: List<Song>,
+    private val onClick: (Song) -> Unit = {}
+) : RecyclerView.Adapter<SongAdapter.SongVH>() {
+
     private var onAddToPlaylistClick: ((Song) -> Unit)? = null
     fun setOnAddToPlaylistClickListener(listener: (Song) -> Unit) {
         onAddToPlaylistClick = listener
     }
-    class SongVH(itemView:View): RecyclerView.ViewHolder(itemView) {
+
+    class SongVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvRank: TextView = itemView.findViewById(R.id.tvRank)
         val imgCover: ImageView = itemView.findViewById(R.id.imgCover)
         val txtTitle: TextView = itemView.findViewById(R.id.txtTitle)
         val txtArtist: TextView = itemView.findViewById(R.id.txtArtist)
-
+        val btnAdd: ImageView = itemView.findViewById(R.id.btnAdd)
         val btnMore: ImageButton = itemView.findViewById(R.id.btnMore)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongVH {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_song, parent, false)
         return SongVH(view)
     }
+
     override fun onBindViewHolder(holder: SongVH, position: Int) {
         try {
             val song = items[position]
+
+            // Số thứ tự
+            holder.tvRank.text = (position + 1).toString()
+
+            // Title + Artist
             holder.txtTitle.text = song.title
             holder.txtArtist.text = song.artist.fullName
-            Log.d("SongAdapter", "cover url = ${song.coverImage}")
+
             // Load ảnh cover
             Glide.with(holder.itemView)
                 .load(song.coverImage)
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_default_album_art)
                 .error(R.drawable.img_error)
+                .centerCrop()
                 .into(holder.imgCover)
-            Log.d("SongAdapter", "cover url = '${song.coverImage}'")
 
+            // Click vào item → mở mini player
             holder.itemView.setOnClickListener {
                 (holder.itemView.context as? MainActivity)?.showMiniPlayer(song)
             }
-//            show menu khi click btnMore
+
+            // Nút +
+            holder.btnAdd.setOnClickListener {
+                onAddToPlaylistClick?.invoke(song)
+            }
+
+            // Nút menu (...)
             holder.btnMore.setOnClickListener { view ->
                 val popup = android.widget.PopupMenu(view.context, view)
                 popup.inflate(R.menu.song_item_menu)
@@ -67,19 +84,19 @@ class SongAdapter(
                 popup.show()
             }
 
-        }
-        catch (e : Exception) {
+        } catch (e: Exception) {
             Log.e("SongAdapter", "Error binding view holder", e)
         }
-
     }
 
     override fun getItemCount() = items.size
+
     @SuppressLint("NotifyDataSetChanged")
     fun submit(newItems: List<Song>) {
         items = newItems
         notifyDataSetChanged()
     }
+
     fun updateData(newItems: List<Song>) {
         items = newItems
         notifyDataSetChanged()

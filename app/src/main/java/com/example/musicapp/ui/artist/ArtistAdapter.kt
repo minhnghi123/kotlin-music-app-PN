@@ -1,5 +1,6 @@
 package com.example.musicapp.ui.artist
 
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,15 +8,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.musicapp.models.artists.Artist
 import com.example.musicapp.R
-class ArtistAdapter(private val artists: List<Artist>) :
-    RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
+import com.example.musicapp.models.artists.Artist
+
+class ArtistAdapter(
+    private val artists: List<Artist>,
+    private val onItemClick: ((Artist) -> Unit)? = null
+) : RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
 
     class ArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivCover: ImageView = itemView.findViewById(R.id.ivArtistCover)
         val tvName: TextView = itemView.findViewById(R.id.tvArtistName)
-        val tvCountry: TextView = itemView.findViewById(R.id.tvArtistCountry)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
@@ -26,9 +29,21 @@ class ArtistAdapter(private val artists: List<Artist>) :
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         val artist = artists[position]
+
+        // chỉ hiển thị tên
         holder.tvName.text = artist.fullName
-        holder.tvCountry.text = artist.country
-        Glide.with(holder.itemView.context).load(artist.coverImage).into(holder.ivCover)
+
+        // load avatar
+        Glide.with(holder.itemView.context)
+            .load(artist.coverImage)
+            .placeholder(R.drawable.ic_user)
+            .circleCrop()
+            .into(holder.ivCover)
+
+        // click
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(artist)
+        }
     }
 
     override fun getItemCount() = artists.size
