@@ -1,5 +1,7 @@
 package com.example.musicapp.network
 
+import com.example.musicapp.models.artists.Artist
+import com.example.musicapp.models.artists.ArtistResponse
 import com.example.musicapp.models.auth.ApiResponse
 import com.example.musicapp.models.auth.LoginRequest
 import com.example.musicapp.models.auth.SignUpRequest
@@ -11,6 +13,7 @@ import com.example.musicapp.models.playlists.PlaylistDetailResponse
 import com.example.musicapp.models.playlists.PlaylistResponse
 import com.example.musicapp.models.songs.ApiListResponse
 import com.example.musicapp.models.songs.Song
+import com.example.musicapp.models.songs.SongListResponse
 import com.example.musicapp.models.songs.SongResponse
 import com.example.musicapp.models.users.ChangePasswordRequest
 import com.example.musicapp.models.users.UpdateMeRequest
@@ -37,6 +40,7 @@ interface ApiService {
     fun login(@Body request: LoginRequest): Call<ApiResponse>
     @POST("auth/logout")
     fun logout(): Call<ApiResponse>
+
 
 //  Phan cho thong tin ca nhan
     @GET("user/me")
@@ -72,5 +76,11 @@ interface ApiService {
 
     @GET("playlist/{id}")
     fun getPlaylistDetail(@Path("id") playlistId: String): Call<PlaylistDetailResponse>
+// Phan cho arist
+    @GET("music/artists")
+    fun getHotArtists(): Call<ArtistResponse>
+
+    @GET("music/random")
+    fun getSuggestedSongs(): Call<SongListResponse>
 
 }

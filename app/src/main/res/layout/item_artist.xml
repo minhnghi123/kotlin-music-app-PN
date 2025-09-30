@@ -14,18 +14,15 @@
 
     <TextView
         android:id="@+id/tvArtistName"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Artist name"
         android:textStyle="bold"
+        android:layout_marginTop="4dp"
         android:ellipsize="end"
-        android:maxLines="1"
-        android:layout_marginTop="4dp"/>
-
-    <TextView
-        android:id="@+id/tvArtistCountry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Country"
-        android:textSize="12sp"/>
+        android:maxLines="2"
+        android:singleLine="false"
+        android:scrollHorizontally="false"
+        android:gravity="center"
+        android:breakStrategy="simple"/>
 </LinearLayout>

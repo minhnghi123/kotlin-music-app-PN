@@ -91,7 +91,7 @@ class LibraryFragment : Fragment() {
                     Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
 
                     // Gán danh sách playlist, songs, artists
-                    rvPlaylists.adapter = PlaylistAdapter(user.playlists).apply {
+                    rvPlaylists.adapter = PlaylistAdapter(user.playlists ?: emptyList()).apply {
                         setOnItemClickListener { playlist ->
                             val fragment = PlaylistDetailFragment().apply {
                                 arguments = Bundle().apply {

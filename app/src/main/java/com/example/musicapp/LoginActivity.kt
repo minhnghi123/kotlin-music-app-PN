@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
                         val body = response.body()
                         Toast.makeText(this@LoginActivity, body?.message, Toast.LENGTH_SHORT).show()
 
-                        // Quay về Home sau khi đăng nhập
+                        // Quay về Home sau khi đăng nhập/
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                         intent.putExtra("NAVIGATE_HOME", true)
