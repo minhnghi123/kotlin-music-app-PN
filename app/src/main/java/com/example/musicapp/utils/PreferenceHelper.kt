@@ -7,7 +7,10 @@ object PreferenceHelper {
     private const val PREFS_NAME = "app_prefs"
     private const val KEY_LOGGED_IN = "isLoggedIn"
     private const val KEY_DARK_MODE = "darkMode"
+    private const val KEY_USERNAME = "username"
+    private const val KEY_AVATAR = "avatar"
 
+    // --- LOGIN STATE ---
     fun isLoggedIn(context: Context): Boolean {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return prefs.getBoolean(KEY_LOGGED_IN, false)
@@ -18,7 +21,7 @@ object PreferenceHelper {
         prefs.edit().putBoolean(KEY_LOGGED_IN, value).apply()
     }
 
-    // ✅ Dark Mode
+    // --- DARK MODE ---
     fun isDarkMode(context: Context): Boolean {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return prefs.getBoolean(KEY_DARK_MODE, false)
@@ -35,5 +38,32 @@ object PreferenceHelper {
             if (darkMode) AppCompatDelegate.MODE_NIGHT_YES
             else AppCompatDelegate.MODE_NIGHT_NO
         )
+    }
+
+    // --- USER INFO ---
+    fun setUserInfo(context: Context, username: String?, avatar: String?) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit()
+            .putString(KEY_USERNAME, username)
+            .putString(KEY_AVATAR, avatar)
+            .apply()
+    }
+
+    fun getUsername(context: Context): String? {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getString(KEY_USERNAME, null)
+    }
+
+    fun getAvatar(context: Context): String? {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getString(KEY_AVATAR, null)
+    }
+
+    fun clearUserInfo(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit()
+            .remove(KEY_USERNAME)
+            .remove(KEY_AVATAR)
+            .apply()
     }
 }

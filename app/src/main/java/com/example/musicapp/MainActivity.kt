@@ -132,12 +132,4 @@ class MainActivity : AppCompatActivity() {
         }
         ContextCompat.startForegroundService(this, intent)
     }
-
-    /**
-     * Hàm public để gọi sau khi login/register thành công
-     */
-    fun onAuthSuccess() {
-        // Quay về HomeFragment
-        loadFragment(HomeFragment(), "HOME")
-    }
 }
