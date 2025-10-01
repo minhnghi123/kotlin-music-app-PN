@@ -28,8 +28,8 @@ class LoginActivity : AppCompatActivity() {
         val tvGoToRegister: TextView = findViewById(R.id.tv_go_to_register)
 
         btnLogin.setOnClickListener {
-            val user = username.text.toString()
-            val pass = password.text.toString()
+            val user = username.text.toString().trim()
+            val pass = password.text.toString().trim()
 
             val request = LoginRequest(user, pass)
             ApiClient.api.login(request).enqueue(object : Callback<ApiResponse> {

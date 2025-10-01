@@ -20,8 +20,20 @@ class SongAdapter(
 ) : RecyclerView.Adapter<SongAdapter.SongVH>() {
 
     private var onAddToPlaylistClick: ((Song) -> Unit)? = null
+    private var onHeartClick: ((Song) -> Unit)? = null
+    private var favoriteSongIds: Set<String> = emptySet()
+
     fun setOnAddToPlaylistClickListener(listener: (Song) -> Unit) {
         onAddToPlaylistClick = listener
+    }
+
+    fun setOnHeartClickListener(listener: (Song) -> Unit) {
+        onHeartClick = listener
+    }
+
+    fun updateFavoriteIds(ids: Set<String>) {
+        favoriteSongIds = ids
+        notifyDataSetChanged()
     }
 
     class SongVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,6 +41,7 @@ class SongAdapter(
         val imgCover: ImageView = itemView.findViewById(R.id.imgCover)
         val txtTitle: TextView = itemView.findViewById(R.id.txtTitle)
         val txtArtist: TextView = itemView.findViewById(R.id.txtArtist)
+        val btnHeart: ImageView = itemView.findViewById(R.id.btnHeart)
         val btnAdd: ImageView = itemView.findViewById(R.id.btnAdd)
         val btnMore: ImageButton = itemView.findViewById(R.id.btnMore)
     }
@@ -58,9 +71,17 @@ class SongAdapter(
                 .centerCrop()
                 .into(holder.imgCover)
 
+            // Update heart icon based on favorite status
+            updateHeartIcon(holder, song._id)
+
             // Click vào item → mở mini player
             holder.itemView.setOnClickListener {
                 (holder.itemView.context as? MainActivity)?.showMiniPlayer(song)
+            }
+
+            // Heart click - toggle favorite
+            holder.btnHeart.setOnClickListener {
+                onHeartClick?.invoke(song)
             }
 
             // Nút +
@@ -100,5 +121,13 @@ class SongAdapter(
     fun updateData(newItems: List<Song>) {
         items = newItems
         notifyDataSetChanged()
+    }
+
+    private fun updateHeartIcon(holder: SongVH, songId: String) {
+        val isFavorite = favoriteSongIds.contains(songId)
+        holder.btnHeart.setImageResource(
+            if (isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_border
+        )
+        holder.btnHeart.alpha = if (isFavorite) 1.0f else 0.6f
     }
 }

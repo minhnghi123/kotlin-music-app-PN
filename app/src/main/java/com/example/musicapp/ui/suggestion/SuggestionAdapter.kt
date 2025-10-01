@@ -19,6 +19,11 @@ class SuggestionAdapter(
     private val onClick: (Song) -> Unit = {}
 ) : RecyclerView.Adapter<SuggestionAdapter.SuggestionVH>() {
 
+
+    private var onAddToPlaylistClick: ((Song) -> Unit)? = null
+    fun setOnAddToPlaylistClickListener(listener: (Song) -> Unit) {
+        onAddToPlaylistClick = listener
+    }
     class SuggestionVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgCover: ImageView = itemView.findViewById(R.id.imgCover)
         val txtTitle: TextView = itemView.findViewById(R.id.txtTitle)
@@ -50,7 +55,7 @@ class SuggestionAdapter(
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.action_add_playlist -> {
-                        Toast.makeText(view.context, "Thêm vào playlist", Toast.LENGTH_SHORT).show()
+                        onAddToPlaylistClick?.invoke(song)
                         true
                     }
                     else -> false
