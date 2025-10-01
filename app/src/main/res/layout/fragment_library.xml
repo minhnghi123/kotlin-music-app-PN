@@ -95,6 +95,28 @@
                 android:orientation="horizontal"
                 android:overScrollMode="never"/>
 
+            <!-- Favorite Songs Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My Favorite Songs"
+                android:drawableStart="@drawable/ic_favorite"
+                android:drawablePadding="12dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:id="@+id/tvFavHeader"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFavoriteSongs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:overScrollMode="never"/>
+
             <!-- Followed Artists Section -->
 
             <TextView
