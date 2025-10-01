@@ -21,6 +21,8 @@ import com.example.musicapp.ui.artist.ArtistAdapter
 import com.example.musicapp.ui.home.SongAdapter
 import com.example.musicapp.ui.playlists.PlaylistAdapter
 import com.example.musicapp.ui.playlists.PlaylistDetailFragment
+import com.example.musicapp.ui.favorites.FavoriteSongsFragment
+import com.example.musicapp.data.FavoriteSongsRepository
 import com.example.musicapp.utils.PreferenceHelper
 import retrofit2.Call
 import retrofit2.Response
@@ -32,9 +34,11 @@ class LibraryFragment : Fragment() {
     private lateinit var tvEmail: TextView
     private lateinit var rvPlaylists: RecyclerView
     private lateinit var rvSongs: RecyclerView
+    private lateinit var rvFavoriteSongs: RecyclerView
     private lateinit var rvArtists: RecyclerView
     private lateinit var btnLogout: Button
     private lateinit var  btnEditProfile: Button
+    private lateinit var favoriteRepository: FavoriteSongsRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,6 +54,7 @@ class LibraryFragment : Fragment() {
         tvEmail = view.findViewById(R.id.tvEmail)
         rvPlaylists = view.findViewById(R.id.rvPlaylists)
         rvSongs = view.findViewById(R.id.rvSongs)
+        rvFavoriteSongs = view.findViewById(R.id.rvFavoriteSongs)
         rvArtists = view.findViewById(R.id.rvArtists)
         btnLogout = view.findViewById(R.id.btnLogout)
         btnEditProfile = view.findViewById(R.id.btnEditProfile)
@@ -57,9 +62,21 @@ class LibraryFragment : Fragment() {
         rvPlaylists.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         rvSongs.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        rvFavoriteSongs.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         rvArtists.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
+        // Initialize repository
+        favoriteRepository = FavoriteSongsRepository()
+
         fetchUserData()
+        loadFavoriteSongs()
+
+        view.findViewById<TextView>(R.id.tvFavHeader).setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, com.example.musicapp.ui.favorites.FavoriteSongsFragment.newInstance())
+                .addToBackStack("FAVORITES")
+                .commit()
+        }
 //        click sự kiện chi tiết
         btnEditProfile.setOnClickListener {
             parentFragmentManager.beginTransaction().replace(R.id.fragmentContainer,
@@ -121,6 +138,18 @@ class LibraryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fetchUserData()
+        loadFavoriteSongs()
     }
+
+    private fun loadFavoriteSongs() {
+        favoriteRepository.getFavoriteSongs { songs, error, metadata ->
+            if (error == null && songs != null) {
+                rvFavoriteSongs.adapter = SongAdapter(songs) { song ->
+                    // Handle song click - could open player or navigate to detail
+                }
+            }
+        }
+    }
+
 
 }

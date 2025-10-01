@@ -29,6 +29,7 @@ import com.example.musicapp.models.songs.Song
 import com.example.musicapp.models.songs.SongListResponse
 import com.example.musicapp.models.users.UserResponse
 import com.example.musicapp.network.ApiClient
+import com.example.musicapp.data.FavoriteSongsRepository
 import com.example.musicapp.ui.auth.LoginActivity
 import com.example.musicapp.ui.artist.ArtistAdapter
 import com.example.musicapp.ui.playlists.PlaylistAdapter
@@ -45,6 +46,7 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: SongAdapter
     private lateinit var viewModel: SongViewModel
     private val playerVM: com.example.musicapp.ui.player.PlayerViewModel by activityViewModels()
+    private lateinit var favoriteRepository: FavoriteSongsRepository
 
     // RecyclerView gợi ý bài hát
     private lateinit var rvSuggestions: RecyclerView
@@ -70,6 +72,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize repository
+        favoriteRepository = FavoriteSongsRepository()
+
         // Playlist section
         rv = view.findViewById(R.id.rvPlaylists)
         rv.layoutManager = LinearLayoutManager(requireContext())
@@ -77,6 +82,10 @@ class HomeFragment : Fragment() {
 //        showplaylist dialog
         adapter.setOnAddToPlaylistClickListener { song ->
             showPlaylistDialog(song)
+        }
+        // Set up heart click listener for favorites
+        adapter.setOnHeartClickListener { song ->
+            toggleFavorite(song)
         }
         rv.adapter = adapter
 
@@ -88,6 +97,9 @@ class HomeFragment : Fragment() {
             err?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show() }
         }
         viewModel.loadSongs()
+
+        // Load favorite songs to update heart icons
+        loadFavoriteSongs()
 
         //  Suggestions section
         rvSuggestions = view.findViewById(R.id.rvSuggestions)
@@ -252,7 +264,7 @@ class HomeFragment : Fragment() {
 
                     if (!user?.avatar.isNullOrEmpty()) {
                         Glide.with(requireContext())
-                            .load(user.avatar)
+                            .load(user?.avatar)
                             .placeholder(R.drawable.ic_user)
                             .circleCrop()
                             .into(imgAvatar!!)
@@ -366,7 +378,7 @@ class HomeFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Tạo Playlist mới")
             .setView(inputView)
-            .setPositiveButton("Tạo") { d, _ ->
+            .setPositiveButton("Tạo") { _, _ ->
                 val title = etTitle.text.toString().trim()
                 val desc = etDescription.text.toString().trim()
 
@@ -402,5 +414,26 @@ class HomeFragment : Fragment() {
             }
             .setNegativeButton("Hủy", null)
             .show()
+    }
+
+    private fun toggleFavorite(song: Song) {
+        // Optimistic toggle: update UI immediately
+        adapter.updateFavoriteIds((setOf<String>() + listOf(song._id) + emptySet()).toSet())
+        favoriteRepository.addFavoriteSong(song._id) { success, message ->
+            if (success) {
+                loadFavoriteSongs()
+            } else {
+                Toast.makeText(requireContext(), "Error: $message", Toast.LENGTH_SHORT).show()
+                loadFavoriteSongs()
+            }
+        }
+    }
+
+    private fun loadFavoriteSongs() {
+        favoriteRepository.getFavoriteSongs { songs, error, favoriteIds ->
+            if (error == null) {
+                favoriteIds?.let { adapter.updateFavoriteIds(it) }
+            }
+        }
     }
 }

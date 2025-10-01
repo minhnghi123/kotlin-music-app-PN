@@ -12,6 +12,7 @@ import com.example.musicapp.models.playlists.CreatePlaylistResponse
 import com.example.musicapp.models.playlists.PlaylistDetailResponse
 import com.example.musicapp.models.playlists.PlaylistResponse
 import com.example.musicapp.models.songs.ApiListResponse
+import com.example.musicapp.models.favorites.FavoriteSongsResponse
 import com.example.musicapp.models.songs.Song
 import com.example.musicapp.models.songs.SongListResponse
 import com.example.musicapp.models.songs.SongResponse
@@ -23,6 +24,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
@@ -82,5 +84,21 @@ interface ApiService {
 
     @GET("music/random")
     fun getSuggestedSongs(): Call<SongListResponse>
+
+    // Favorite Songs API
+    @GET("favorite-songs")
+    fun getFavoriteSongs(): Call<FavoriteSongsResponse>
+
+    @GET("favorite-songs/{id}")
+    fun getFavoriteSongById(@Path("id") songId: String): Call<SongResponse>
+
+    @POST("favorite-songs/{id}")
+    fun addFavoriteSong(@Path("id") songId: String): Call<ApiResponse>
+
+    @DELETE("favorite-songs/{id}")
+    fun removeFavoriteSong(@Path("id") songId: String): Call<ApiResponse>
+
+    @DELETE("favorite-songs")
+    fun removeAllFavoriteSongs(): Call<ApiResponse>
 
 }
