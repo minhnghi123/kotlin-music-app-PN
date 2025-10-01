@@ -1,6 +1,7 @@
 package com.example.musicapp.ui.artist
 
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,17 +30,18 @@ class ArtistAdapter(
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         val artist = artists[position]
-
         // chỉ hiển thị tên
         holder.tvName.text = artist.fullName
 
+        // Log the image URL
+        Log.d("ArtistAdapter", "Avatar URL = ${artist.coverImage}")
         // load avatar
-        Glide.with(holder.itemView.context)
+        Glide.with(holder.itemView)
             .load(artist.coverImage)
             .placeholder(R.drawable.ic_user)
-            .circleCrop()
+            .error(R.drawable.img_error)
+            .centerCrop()
             .into(holder.ivCover)
-
         // click
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(artist)

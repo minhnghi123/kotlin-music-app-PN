@@ -57,7 +57,6 @@ class SongAdapter(
                 .error(R.drawable.img_error)
                 .centerCrop()
                 .into(holder.imgCover)
-
             // Click vào item → mở mini player
             holder.itemView.setOnClickListener {
                 (holder.itemView.context as? MainActivity)?.showMiniPlayer(song)
