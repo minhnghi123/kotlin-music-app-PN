@@ -2,6 +2,7 @@ package com.example.musicapp.ui.library
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +42,7 @@ class ProfileDetailFragment : Fragment() {
     private lateinit var btnEditProfile: Button
     private lateinit var btnChangePassword: Button
 
-//Ham chuyen doi uri sang file
+    //Ham chuyen doi uri sang file
     private fun uriToFile(uri: Uri): File {
         val contentResolver = requireContext().contentResolver
         // thử lấy mime
@@ -56,7 +57,7 @@ class ProfileDetailFragment : Fragment() {
         return file
     }
 
-//Avatar Picker + Preview
+    //Avatar Picker + Preview
     private var selectedAvatarUri: Uri? = null
 
     private val pickImageLauncher = registerForActivityResult(
@@ -101,76 +102,76 @@ class ProfileDetailFragment : Fragment() {
 
         return view
     }
-//show pop upp chinh sua
-private fun showEditProfileDialog() {
-    val dialogView = LayoutInflater.from(requireContext())
-        .inflate(R.layout.dialog_edit_profile, null)
+    //show pop upp chinh sua
+    private fun showEditProfileDialog() {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_edit_profile, null)
 
-    val etUsername = dialogView.findViewById<EditText>(R.id.etUsername)
-    val etEmail = dialogView.findViewById<EditText>(R.id.etEmail)
-    val ivPreview = dialogView.findViewById<ImageView>(R.id.ivAvatarPreview)
+        val etUsername = dialogView.findViewById<EditText>(R.id.etUsername)
+        val etEmail = dialogView.findViewById<EditText>(R.id.etEmail)
+        val ivPreview = dialogView.findViewById<ImageView>(R.id.ivAvatarPreview)
 
-    // Lưu tham chiếu để update khi chọn ảnh
-    currentAvatarPreview = ivPreview
+        // Lưu tham chiếu để update khi chọn ảnh
+        currentAvatarPreview = ivPreview
 
-    // Gán dữ liệu hiện tại
-    etUsername.setText(tvUsername.text.toString())
-    etEmail.setText(tvEmail.text.toString())
+        // Gán dữ liệu hiện tại
+        etUsername.setText(tvUsername.text.toString())
+        etEmail.setText(tvEmail.text.toString())
 
-    // Load avatar hiện tại từ server
-    Glide.with(this).load((ivAvatar.drawable)).into(ivPreview)
+        // Load avatar hiện tại từ server
+        Glide.with(this).load((ivAvatar.drawable)).into(ivPreview)
 
-    // Khi click vào ảnh → mở thư viện
-    ivPreview.setOnClickListener {
-        pickImageLauncher.launch("image/*")
+        // Khi click vào ảnh → mở thư viện
+        ivPreview.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Chỉnh sửa thông tin")
+            .setView(dialogView)
+            .setPositiveButton("Lưu") { _, _ ->
+                val newUsername = etUsername.text.toString().trim()
+                val newEmail = etEmail.text.toString().trim()
+
+                // Gửi username, email và ảnh (nếu user có chọn)
+                updateUserProfile(newUsername, newEmail)
+            }
+            .setNegativeButton("Hủy", null)
+            .show()
+
+
     }
+    //show pop up doi mat khau
+    private fun showChangePasswordDialog() {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_change_password, null)
 
-    AlertDialog.Builder(requireContext())
-        .setTitle("Chỉnh sửa thông tin")
-        .setView(dialogView)
-        .setPositiveButton("Lưu") { _, _ ->
-            val newUsername = etUsername.text.toString().trim()
-            val newEmail = etEmail.text.toString().trim()
+        val etOldPassword = dialogView.findViewById<EditText>(R.id.etOldPassword)
+        val etNewPassword = dialogView.findViewById<EditText>(R.id.etNewPassword)
+        val etReNewPassword = dialogView.findViewById<EditText>(R.id.etReNewPassword)
 
-            // Gửi username, email và ảnh (nếu user có chọn)
-            updateUserProfile(newUsername, newEmail)
-        }
-        .setNegativeButton("Hủy", null)
-        .show()
+        AlertDialog.Builder(requireContext())
+            .setTitle("Đổi mật khẩu")
+            .setView(dialogView)
+            .setPositiveButton("Lưu") { _, _ ->
+                val oldPass = etOldPassword.text.toString().trim()
+                val newPass = etNewPassword.text.toString().trim()
+                val reNewPass = etReNewPassword.text.toString().trim()
 
-
-}
-//show pop up doi mat khau
-private fun showChangePasswordDialog() {
-    val dialogView = LayoutInflater.from(requireContext())
-        .inflate(R.layout.dialog_change_password, null)
-
-    val etOldPassword = dialogView.findViewById<EditText>(R.id.etOldPassword)
-    val etNewPassword = dialogView.findViewById<EditText>(R.id.etNewPassword)
-    val etReNewPassword = dialogView.findViewById<EditText>(R.id.etReNewPassword)
-
-    AlertDialog.Builder(requireContext())
-        .setTitle("Đổi mật khẩu")
-        .setView(dialogView)
-        .setPositiveButton("Lưu") { _, _ ->
-            val oldPass = etOldPassword.text.toString().trim()
-            val newPass = etNewPassword.text.toString().trim()
-            val reNewPass = etReNewPassword.text.toString().trim()
-
-            if (oldPass.isEmpty() || newPass.isEmpty() || reNewPass.isEmpty()) {
-                Toast.makeText(requireContext(), "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show()
-                return@setPositiveButton
+                if (oldPass.isEmpty() || newPass.isEmpty() || reNewPass.isEmpty()) {
+                    Toast.makeText(requireContext(), "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                if (newPass != reNewPass) {
+                    Toast.makeText(requireContext(), "Mật khẩu nhập lại không khớp", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                // Gọi API
+                changePassword(oldPass, newPass, reNewPass)
             }
-            if (newPass != reNewPass) {
-                Toast.makeText(requireContext(), "Mật khẩu nhập lại không khớp", Toast.LENGTH_SHORT).show()
-                return@setPositiveButton
-            }
-            // Gọi API
-            changePassword(oldPass, newPass, reNewPass)
-        }
-        .setNegativeButton("Hủy", null)
-        .show()
-}
+            .setNegativeButton("Hủy", null)
+            .show()
+    }
 
     //    Fetch Data
     private fun fetchUserProfile() {
@@ -183,8 +184,9 @@ private fun showChangePasswordDialog() {
                     tvUsername.text = user.username
                     tvEmail.text = user.email
                     tvPassword.text = "********" // luôn ẩn password
-                    Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
 
+                    Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
+//                    Log.d("DEBUG", "Avatar URL = ${user.avatar}")
                     // giả sử server trả về có cờ 2FA thì set checked
                     switchBiometric.isChecked = false
                 } else {
