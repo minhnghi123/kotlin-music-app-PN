@@ -20,10 +20,12 @@ class FavoriteSongsRepository {
             ) {
                 if (response.isSuccessful) {
                     val body = response.body()
-                    if (body?.success == true) {
-                        onResult(body.data.songs, null, body.data.favoriteSongIds.toSet())
+                    if (body?.success == true && body.data != null) {
+                        val songs = body.data.songs ?: emptyList()
+                        val favoriteIds = body.data.favoriteSongIds?.toSet() ?: emptySet()
+                        onResult(songs, null, favoriteIds)
                     } else {
-                        onResult(null, "API returned success=false", null)
+                        onResult(null, "API returned success=false or data=null", null)
                     }
                 } else {
                     onResult(null, "API error ${response.code()}", null)

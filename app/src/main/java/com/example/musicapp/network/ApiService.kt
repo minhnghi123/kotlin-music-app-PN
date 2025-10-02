@@ -1,6 +1,7 @@
 package com.example.musicapp.network
 
 import com.example.musicapp.models.artists.Artist
+import com.example.musicapp.models.artists.ArtistDetailResponse
 import com.example.musicapp.models.artists.ArtistResponse
 import com.example.musicapp.models.auth.ApiResponse
 import com.example.musicapp.models.auth.LoginRequest
@@ -101,4 +102,7 @@ interface ApiService {
     @DELETE("favorite-songs")
     fun removeAllFavoriteSongs(): Call<ApiResponse>
 
+    // Phan cho Artist
+    @GET("artist/{id}")
+    fun getArtistDetail(@Path("id") id: String): Call<ArtistDetailResponse>
 }
