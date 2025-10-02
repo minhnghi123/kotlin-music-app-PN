@@ -105,10 +105,14 @@ class LibraryFragment : Fragment() {
                     // Gán thông tin cơ bản
                     tvUsername.text = user.username
                     tvEmail.text = user.email
-                    Glide.with(requireContext()).load(user.avatar).into(ivAvatar)
+                    Glide.with(requireContext())
+                        .load(user.avatar)
+                        .placeholder(R.drawable.ic_user) // thêm placeholder cho chắc
+                        .into(ivAvatar)
 
-                    // Gán danh sách playlist, songs, artists
-                    rvPlaylists.adapter = PlaylistAdapter(user.playlists).apply {
+                    // Gán danh sách playlist (fix crash null)
+                    val playlists = user.playlists ?: emptyList()
+                    rvPlaylists.adapter = PlaylistAdapter(playlists).apply {
                         setOnItemClickListener { playlist ->
                             val fragment = PlaylistDetailFragment().apply {
                                 arguments = Bundle().apply {
@@ -122,8 +126,12 @@ class LibraryFragment : Fragment() {
                         }
                     }
 
-                    rvSongs.adapter = SongAdapter(user.follow_songs)
-                    rvArtists.adapter = ArtistAdapter(user.follow_artists)
+                    // Gán danh sách songs, artists (cũng phòng null)
+                    val songs = user.follow_songs ?: emptyList()
+                    val artists = user.follow_artists ?: emptyList()
+
+                    rvSongs.adapter = SongAdapter(songs)
+                    rvArtists.adapter = ArtistAdapter(artists)
 
                 } else {
                     Toast.makeText(requireContext(), "Lỗi load dữ liệu", Toast.LENGTH_SHORT).show()
@@ -135,6 +143,7 @@ class LibraryFragment : Fragment() {
             }
         })
     }
+
     override fun onResume() {
         super.onResume()
         fetchUserData()

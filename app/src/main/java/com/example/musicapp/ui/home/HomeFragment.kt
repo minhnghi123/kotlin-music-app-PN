@@ -32,6 +32,7 @@ import com.example.musicapp.network.ApiClient
 import com.example.musicapp.data.FavoriteSongsRepository
 import com.example.musicapp.ui.auth.LoginActivity
 import com.example.musicapp.ui.artist.ArtistAdapter
+import com.example.musicapp.ui.artist.ArtistDetailFragment
 import com.example.musicapp.ui.playlists.PlaylistAdapter
 import com.example.musicapp.ui.suggestion.SuggestionAdapter
 import com.example.musicapp.utils.PreferenceHelper
@@ -169,11 +170,19 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         val artistAdapter = ArtistAdapter(emptyList()) { artist ->
-            Toast.makeText(requireContext(), "Clicked ${artist.fullName}", Toast.LENGTH_SHORT)
-                .show()
+            val fragment = ArtistDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString("ARTIST_ID", artist._id)
+                }
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit()
         }
         rvHotSingers.adapter = artistAdapter
-//  Gọi API lấy danh sách artists
+
+        //  Gọi API lấy danh sách artists
         ApiClient.api.getHotArtists().enqueue(object : Callback<ArtistResponse> {
             override fun onResponse(
                 call: Call<ArtistResponse>,
@@ -182,11 +191,7 @@ class HomeFragment : Fragment() {
                 if (response.isSuccessful && response.body()?.data != null) {
                     val artists = response.body()!!.data
                     rvHotSingers.adapter = ArtistAdapter(artists) { artist ->
-                        Toast.makeText(
-                            requireContext(),
-                            "Clicked ${artist.fullName}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        openArtistDetail(artist._id)
                     }
                 } else {
                     Toast.makeText(
@@ -205,6 +210,7 @@ class HomeFragment : Fragment() {
             }
         })
 
+        // Nút "Xem tất cả"
         val tvViewAll = view.findViewById<TextView>(R.id.tvViewAllHotSingers)
         tvViewAll.setOnClickListener {
             Toast.makeText(requireContext(), "View All clicked", Toast.LENGTH_SHORT).show()
@@ -436,4 +442,17 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+    private fun openArtistDetail(artistId: String) {
+        val fragment = ArtistDetailFragment().apply {
+            arguments = Bundle().apply {
+                putString("artistId", artistId)
+            }
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack("ARTIST_DETAIL")
+            .commit()
+    }
+
 }

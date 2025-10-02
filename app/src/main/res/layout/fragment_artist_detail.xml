@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header: cover + name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingBottom="12dp">
+
+            <!-- Ảnh ca sĩ full ngang -->
+            <ImageView
+                android:id="@+id/ivArtistCover"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="Artist cover"
+                android:background="@drawable/ic_user"/>
+
+            <!-- Tên ca sĩ căn giữa -->
+            <TextView
+                android:id="@+id/tvArtistName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Artist Name"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- Bài hát nổi bật (title) -->
+        <TextView
+            android:id="@+id/tvHeaderSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bài hát nổi bật"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"
+            android:layout_marginLeft="15dp"/>
+
+        <!-- RecyclerView các bài hát (chiều dọc) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSongsByArtist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false"
+            android:paddingBottom="12dp"
+            android:layout_marginLeft="15dp"
+            />
+
+        <!-- (Tuỳ chọn) nút Xem thêm nếu muốn giới hạn số bài hiện trước, ẩn khi ko cần -->
+        <TextView
+            android:id="@+id/btnShowMoreSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xem thêm"
+            android:textColor="@color/purple_500"
+            android:paddingTop="6dp"
+            android:visibility="gone"/>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#22000000"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Hot singers header -->
+        <LinearLayout
+            android:id="@+id/headerHotSingers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingEnd="8dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvHotSingers"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Có thể bạn sẽ thích"
+                android:layout_marginLeft="15dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+        <!-- Horizontal list of hot singers -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHotSingers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:layout_marginLeft="15dp"
+            android:overScrollMode="never"/>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#22000000"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Information Singer -->
+        <LinearLayout
+            android:id="@+id/headerIn4Singers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thông tin"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="15dp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Real name -->
+            <TextView
+                android:id="@+id/tvArtistRealName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên thật: "
+                android:layout_marginLeft="15dp"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- Country -->
+            <TextView
+                android:id="@+id/tvArtistCountry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quốc gia: "
+                android:textSize="14sp"
+                android:layout_marginLeft="15dp"
+                android:textColor="@android:color/black"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
