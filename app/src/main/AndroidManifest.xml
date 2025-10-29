@@ -29,6 +29,10 @@
         <activity android:name=".ui.auth.LoginActivity" />
         <activity android:name=".ui.auth.RegisterActivity" />
         <activity android:name="com.example.myapp.SettingActivity" />
+        <activity 
+            android:name=".ui.player.PlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MusicApp" />
         <receiver android:name=".receiver.MusicControlReceiver" />
         <service
             android:name=".receiver.MusicService"

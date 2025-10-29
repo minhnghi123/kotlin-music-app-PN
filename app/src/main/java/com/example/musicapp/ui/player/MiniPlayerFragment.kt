@@ -1,5 +1,6 @@
 package com.example.musicapp.ui.player
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ class MiniPlayerFragment : Fragment() {
     private lateinit var txtTitle: TextView
     private lateinit var txtArtist: TextView
     private lateinit var btnToggle: ImageButton
+    private lateinit var rootView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_mini_player, container, false)
@@ -30,6 +32,7 @@ class MiniPlayerFragment : Fragment() {
         txtTitle = view.findViewById(R.id.txtMiniTitle)
         txtArtist = view.findViewById(R.id.txtMiniArtist)
         btnToggle = view.findViewById(R.id.btnMiniToggle)
+        rootView = view.findViewById(R.id.miniRoot)
 
         // 1) Ẩn/hiện mini theo currentSong
         playerVM.currentSong.observe(viewLifecycleOwner) { song ->
@@ -48,21 +51,29 @@ class MiniPlayerFragment : Fragment() {
         // 2) Đổi icon theo trạng thái play/pause
         playerVM.isPlaying.observe(viewLifecycleOwner) { playing ->
             if (playing) {
-                // Đang phát nhạc, hiển thị icon pause của bạn
-                btnToggle.setImageResource(R.drawable.ic_pause) // Sử dụng R.drawable.ic_pause của bạn
+                btnToggle.setImageResource(R.drawable.ic_pause)
             } else {
-                // Đang dừng, hiển thị icon play của bạn
-                btnToggle.setImageResource(R.drawable.ic_play)  // Sử dụng R.drawable.ic_play của bạn
+                btnToggle.setImageResource(R.drawable.ic_play)
             }
         }
 
         // 3) Nhấn play/pause
         btnToggle.setOnClickListener { playerVM.toggle() }
 
-        // Nhấn vào mini mở màn hình Player đầy đủ
-        view.setOnClickListener {
-            // TODO: startActivity(PlayerActivity) nếu bạn muốn
+        // 4) Click vào mini player để mở PlayerActivity
+        rootView.setOnClickListener {
+            val intent = Intent(requireContext(), PlayerActivity::class.java)
+            startActivity(intent)
         }
 
+        // Optional: Next button
+        view.findViewById<ImageButton>(R.id.btnMiniNext)?.setOnClickListener {
+            playerVM.playNext()
+        }
+
+        // Optional: Like button
+        view.findViewById<ImageButton>(R.id.btnMiniLike)?.setOnClickListener {
+            // TODO: Add to favorites
+        }
     }
 }
