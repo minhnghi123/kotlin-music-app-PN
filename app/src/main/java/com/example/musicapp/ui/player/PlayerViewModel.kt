@@ -30,6 +30,12 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     private val _progress = MutableLiveData(PlayerProgress(0L, 0L))
     val progress: LiveData<PlayerProgress> = _progress
 
+    private val _currentPosition = MutableLiveData(0)
+    val currentPosition: LiveData<Int> = _currentPosition
+
+    private val _duration = MutableLiveData(0)
+    val duration: LiveData<Int> = _duration
+
     val player: ExoPlayer = ExoPlayer.Builder(app).build().apply {
         setAudioAttributes(
             AudioAttributes.Builder()
@@ -48,10 +54,21 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     init {
         // Gán player này cho PlayerHolder
         PlayerHolder.player = player
+        
+        // Tick cập nhật tiến độ mỗi 500ms
+        viewModelScope.launch {
+            while (isActive) {
+                val durationMs = if (player.duration > 0) player.duration else 0L
+                val position = player.currentPosition
+                _progress.postValue(PlayerProgress(position, durationMs))
+                _currentPosition.postValue(position.toInt())
+                _duration.postValue(durationMs.toInt())
+                delay(500)
+            }
+        }
     }
 
     fun play(song: Song) {
-        // NOTE: đổi "song.streamUrl" theo model của bạn
         val mediaItem = MediaItem.Builder()
             .setUri(song.fileUrl)
             .setMediaMetadata(
@@ -67,26 +84,42 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
         player.prepare()
         player.play()
         _currentSong.postValue(song)
+        
+        // Lưu vào PlayerHolder để PlayerActivity có thể access
+        PlayerHolder.currentSong = song
     }
 
     fun toggle() {
         if (player.isPlaying) player.pause() else player.play()
     }
 
-    fun seekTo(positionMs: Long) {
-        player.seekTo(positionMs)
+    fun pause() {
+        player.pause()
     }
 
-    init {
-        // Tick cập nhật tiến độ mỗi 500ms
-        viewModelScope.launch {
-            while (isActive) {
-                val duration = if (player.duration > 0) player.duration else 0L
-                val position = player.currentPosition
-                _progress.postValue(PlayerProgress(position, duration))
-                delay(500)
-            }
-        }
+    fun resume() {
+        player.play()
+    }
+
+    fun seekTo(positionMs: Int) {
+        player.seekTo(positionMs.toLong())
+    }
+
+    fun playNext() {
+        // TODO: Implement playlist logic
+        player.seekToNext()
+    }
+
+    fun playPrevious() {
+        // TODO: Implement playlist logic
+        player.seekToPrevious()
+    }
+
+    fun updateProgress() {
+        val position = player.currentPosition
+        val durationMs = if (player.duration > 0) player.duration else 0L
+        _currentPosition.postValue(position.toInt())
+        _duration.postValue(durationMs.toInt())
     }
 
     override fun onCleared() {
