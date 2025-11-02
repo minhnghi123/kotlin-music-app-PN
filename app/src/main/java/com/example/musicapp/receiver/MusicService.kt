@@ -206,6 +206,5 @@ class MusicService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // KHÔNG release PlayerHolder.player ở đây (nếu ViewModel vẫn dùng nó)
     }
 }
