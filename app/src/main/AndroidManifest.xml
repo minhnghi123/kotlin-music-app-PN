@@ -19,6 +19,7 @@
         tools:targetApi="23">
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.MusicApp"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,9 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.auth.LoginActivity" />
-        <activity android:name=".ui.auth.RegisterActivity" />
-        <activity android:name="com.example.myapp.SettingActivity" />
+        <activity android:name=".ui.auth.LoginActivity"
+            android:theme="@style/Theme.MusicApp"/>
+        <activity android:name=".ui.auth.RegisterActivity"
+            android:theme="@style/Theme.MusicApp"/>
+        <activity android:name="com.example.myapp.SettingActivity"
+            android:theme="@style/Theme.MusicApp"/>
         <receiver android:name=".receiver.MusicControlReceiver" />
         <service
             android:name=".receiver.MusicService"

@@ -17,7 +17,8 @@
         android:layout_height="64dp"
         android:layout_above="@id/bottomNav"
         android:visibility="gone"
-        android:background="@color/white" />
+        android:background="@color/backgroundColor"
+        />
 
     <!-- Thanh navigation dưới -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

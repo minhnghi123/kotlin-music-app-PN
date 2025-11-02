@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/colorBackground">
+    android:background="@color/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <!-- Header -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,18 +60,18 @@
                     android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Welcome back!"
-                    android:textSize="16sp"
                     android:layout_marginTop="48dp"
-                    android:textColor="@color/colorText"/>
+                    android:text="Welcome back!"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="User Name"
-                    android:textSize="14sp"
-                    android:textColor="@color/colorText"/>
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <!-- Notification -->
@@ -105,7 +106,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="12dp">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

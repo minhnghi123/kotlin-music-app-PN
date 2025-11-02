@@ -66,4 +66,15 @@ object PreferenceHelper {
             .remove(KEY_AVATAR)
             .apply()
     }
+
+    fun saveBoolean(context: Context, key: String, value: Boolean) {
+        val sharedPref = context.getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean(key, value).apply()
+    }
+
+    fun getBoolean(context: Context, key: String, defaultValue: Boolean): Boolean {
+        val sharedPref = context.getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE)
+        return sharedPref.getBoolean(key, defaultValue)
+    }
+
 }

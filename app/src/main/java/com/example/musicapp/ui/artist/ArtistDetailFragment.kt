@@ -26,7 +26,7 @@ class ArtistDetailFragment : Fragment() {
     private lateinit var songAdapter: SongAdapter
     private lateinit var tvArtistName: TextView
     private lateinit var ivArtistCover: ImageView
-    private lateinit var btnShowMoreSong: TextView   // ✅ đổi sang TextView
+    private lateinit var btnShowMoreSong: TextView
 
     // ---- Hot singers
     private lateinit var rvHotSingers: RecyclerView
@@ -58,7 +58,7 @@ class ArtistDetailFragment : Fragment() {
         rvSongs = view.findViewById(R.id.rvSongsByArtist)
         tvArtistName = view.findViewById(R.id.tvArtistName)
         ivArtistCover = view.findViewById(R.id.ivArtistCover)
-        btnShowMoreSong = view.findViewById(R.id.btnShowMoreSong) // ✅ sửa id
+        btnShowMoreSong = view.findViewById(R.id.btnShowMoreSong)
 
         // Songs RecyclerView
         rvSongs.layoutManager = LinearLayoutManager(requireContext())

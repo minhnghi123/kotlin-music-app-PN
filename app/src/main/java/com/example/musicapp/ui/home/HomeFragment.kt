@@ -106,7 +106,7 @@ class HomeFragment : Fragment() {
         rvSuggestions = view.findViewById(R.id.rvSuggestions)
         val layoutManager = GridLayoutManager(
             requireContext(),
-            3, // 3 item dọc
+            3,
             RecyclerView.HORIZONTAL,
             false
         )
@@ -154,8 +154,8 @@ class HomeFragment : Fragment() {
         tvWelcome = view.findViewById(R.id.tvWelcome)
         tvUserName = view.findViewById(R.id.tvUserName)
         iconBell = view.findViewById(R.id.iconBell)
-        iconSetting = view.findViewById(R.id.iconSetting)
         userInfoLayout = view.findViewById(R.id.userInfoLayout)
+        iconSetting = view.findViewById(R.id.iconSetting)
 
         updateHeaderUI()
 

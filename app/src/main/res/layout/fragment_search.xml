@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,20 +25,54 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"/>
 
+    <!-- Đề xuất cho bạn -->
     <TextView
-        android:id="@+id/tvNoResult"
+        android:id="@+id/tvSuggestionsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đề xuất cho bạn"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"/>
+
+    <com.google.android.flexbox.FlexboxLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/layoutSuggestions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Không có kết quả tìm kiếm"
-        android:gravity="center"
-        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="10dp"
+        app:flexWrap="wrap"
+        app:flexDirection="row"
+        app:alignItems="flex_start"
+        app:justifyContent="flex_start"
+        android:background="@android:color/transparent" />
+
+    <!-- Tìm kiếm gần đây -->
+    <TextView
+        android:id="@+id/tvRecentSearchesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tìm kiếm gần đây"
+        android:textStyle="bold"
         android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"
-        android:padding="16dp"/>
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvClearRecent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="XÓA"
+        android:textColor="@color/textColorPrimary"
+        android:textStyle="bold"
+        android:layout_gravity="end"
+        android:layout_marginTop="-20dp"
+        android:paddingEnd="8dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSearchResults"
+        android:id="@+id/rvRecentSearches"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="12dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
 </LinearLayout>
