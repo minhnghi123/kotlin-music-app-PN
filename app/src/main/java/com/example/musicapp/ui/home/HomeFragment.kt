@@ -263,7 +263,7 @@ class HomeFragment : Fragment() {
                 if (!isAdded || view == null) return
 
                 if (response.isSuccessful && response.body()?.success == true) {
-                    val user = response.body()?.data
+                        val user = response.body()?.data
 
                     tvWelcome?.text = "Welcome back !"
                     tvUserName?.text = user?.username ?: "Unknown"

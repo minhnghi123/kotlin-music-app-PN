@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/backgroundColor">
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Xem thêm"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="@color/textPrimary"
             android:paddingTop="6dp"
             android:visibility="gone"/>
 
