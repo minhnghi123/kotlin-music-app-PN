@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                 if (song != null) View.VISIBLE else View.GONE
         }
         setupBottomNav()
+        PreferenceHelper.applyTheme(this)
     }
 
     /**

@@ -23,6 +23,10 @@ class SongAdapter(
     private var onHeartClick: ((Song) -> Unit)? = null
     private var favoriteSongIds: Set<String> = emptySet()
 
+    // 👇 Thêm biến để điều khiển hiển thị
+    private var showLimit = true
+    private val LIMIT = 5
+
     fun setOnAddToPlaylistClickListener(listener: (Song) -> Unit) {
         onAddToPlaylistClick = listener
     }
@@ -56,14 +60,14 @@ class SongAdapter(
         try {
             val song = items[position]
 
-            // Số thứ tự
+            // Rank
             holder.tvRank.text = (position + 1).toString()
 
             // Title + Artist
             holder.txtTitle.text = song.title
             holder.txtArtist.text = song.artist.fullName
 
-            // Load ảnh cover
+            // Load cover
             Glide.with(holder.itemView)
                 .load(song.coverImage)
                 .placeholder(R.drawable.ic_default_album_art)
@@ -71,25 +75,17 @@ class SongAdapter(
                 .centerCrop()
                 .into(holder.imgCover)
 
-            // Update heart icon based on favorite status
+            // Heart
             updateHeartIcon(holder, song._id)
 
-            // Click vào item → mở mini player
+            // Item click
             holder.itemView.setOnClickListener {
                 (holder.itemView.context as? MainActivity)?.showMiniPlayer(song)
             }
 
-            // Heart click - toggle favorite
-            holder.btnHeart.setOnClickListener {
-                onHeartClick?.invoke(song)
-            }
+            holder.btnHeart.setOnClickListener { onHeartClick?.invoke(song) }
+            holder.btnAdd.setOnClickListener { onAddToPlaylistClick?.invoke(song) }
 
-            // Nút +
-            holder.btnAdd.setOnClickListener {
-                onAddToPlaylistClick?.invoke(song)
-            }
-
-            // Nút menu (...)
             holder.btnMore.setOnClickListener { view ->
                 val popup = android.widget.PopupMenu(view.context, view)
                 popup.inflate(R.menu.song_item_menu)
@@ -110,16 +106,27 @@ class SongAdapter(
         }
     }
 
-    override fun getItemCount() = items.size
+    // 👇 Chỉ trả về tối đa 5 bài khi showLimit = true
+    override fun getItemCount(): Int {
+        return if (showLimit && items.size > LIMIT) LIMIT else items.size
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun submit(newItems: List<Song>) {
         items = newItems
+        showLimit = true // reset lại khi load danh sách mới
         notifyDataSetChanged()
     }
 
     fun updateData(newItems: List<Song>) {
         items = newItems
+        notifyDataSetChanged()
+    }
+
+    // 👇 Khi bấm "Xem thêm"
+    @SuppressLint("NotifyDataSetChanged")
+    fun showAll() {
+        showLimit = false
         notifyDataSetChanged()
     }
 

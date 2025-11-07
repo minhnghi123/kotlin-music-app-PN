@@ -1,6 +1,5 @@
 package com.example.musicapp.ui.artist
 
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +12,33 @@ import com.example.musicapp.R
 import com.example.musicapp.models.artists.Artist
 
 class ArtistAdapter(
-    private val artists: List<Artist>,
+    private var artists: List<Artist> = emptyList(),
     private val onItemClick: ((Artist) -> Unit)? = null
 ) : RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
 
-    class ArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivCover: ImageView = itemView.findViewById(R.id.ivArtistCover)
         val tvName: TextView = itemView.findViewById(R.id.tvArtistName)
+
+        fun bind(artist: Artist) {
+            tvName.text = artist.fullName
+
+            // Log để debug ảnh
+            Log.d("ArtistAdapter", "Avatar URL = ${artist.coverImage}")
+
+            // load ảnh ca sĩ
+            Glide.with(itemView.context)
+                .load(artist.coverImage)
+                .placeholder(R.drawable.ic_user)
+                .error(R.drawable.img_error)
+                .centerCrop()
+                .into(ivCover)
+
+            // sự kiện click
+            itemView.setOnClickListener {
+                onItemClick?.invoke(artist)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
@@ -29,24 +48,14 @@ class ArtistAdapter(
     }
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
-        val artist = artists[position]
-        // chỉ hiển thị tên
-        holder.tvName.text = artist.fullName
-
-        // Log the image URL
-        Log.d("ArtistAdapter", "Avatar URL = ${artist.coverImage}")
-        // load avatar
-        Glide.with(holder.itemView)
-            .load(artist.coverImage)
-            .placeholder(R.drawable.ic_user)
-            .error(R.drawable.img_error)
-            .centerCrop()
-            .into(holder.ivCover)
-        // click
-        holder.itemView.setOnClickListener {
-            onItemClick?.invoke(artist)
-        }
+        holder.bind(artists[position])
     }
 
     override fun getItemCount() = artists.size
+
+    // ✅ Thêm hàm update để dễ dàng thay đổi danh sách
+    fun updateArtists(newArtists: List<Artist>) {
+        artists = newArtists
+        notifyDataSetChanged()
+    }
 }

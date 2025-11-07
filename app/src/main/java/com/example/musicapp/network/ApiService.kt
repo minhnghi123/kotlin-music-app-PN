@@ -1,6 +1,7 @@
 package com.example.musicapp.network
 
 import com.example.musicapp.models.artists.Artist
+import com.example.musicapp.models.artists.ArtistDetailResponse
 import com.example.musicapp.models.artists.ArtistResponse
 import com.example.musicapp.models.auth.ApiResponse
 import com.example.musicapp.models.auth.LoginRequest
@@ -32,6 +33,9 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import com.example.musicapp.models.AddCommentRequest
+import com.example.musicapp.models.AddCommentResponse
+import com.example.musicapp.models.CommentResponse
 
 interface ApiService {
 //  Phan cho authentication
@@ -101,4 +105,20 @@ interface ApiService {
     @DELETE("favorite-songs")
     fun removeAllFavoriteSongs(): Call<ApiResponse>
 
+    // Phan cho Artist
+    @GET("artist/{id}")
+    fun getArtistDetail(@Path("id") id: String): Call<ArtistDetailResponse>
+
+    // Comment endpoints
+    @GET("comments/{songId}")
+    suspend fun getComments(@Path("songId") songId: String): Response<CommentResponse>
+
+    @POST("comments")
+    suspend fun addComment(@Body request: AddCommentRequest): Response<AddCommentResponse>
+
+    @DELETE("comments/{commentId}")
+    suspend fun deleteComment(@Path("commentId") commentId: String): Response<AddCommentResponse>
+
+    @POST("comments/{commentId}/like")
+    suspend fun likeComment(@Path("commentId") commentId: String): Response<AddCommentResponse>
 }
