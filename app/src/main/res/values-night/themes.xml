@@ -1,16 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.PNMusic" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.MusicApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="android:windowBackground">@color/backgroundColor</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:colorBackground">@color/backgroundColor</item>
+        <item name="materialCardViewStyle">@style/CardViewStyle</item>
+    </style>
 
-        <!-- Primary -->
-        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
-        <item name="android:textColorSecondary">@color/colorTextSecondary</item>
-
-        <!-- Background & surfaces -->
-        <item name="android:windowBackground">@color/background</item>
-        <item name="colorSurface">@color/background</item>
-        <item name="colorOnSurface">@color/textPrimary</item>
-
-        <!-- Status Bar -->
-        <item name="android:statusBarColor">@color/background</item>
+    <style name="CardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/cardColor</item>
     </style>
 </resources>

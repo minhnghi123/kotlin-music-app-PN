@@ -12,6 +12,7 @@ import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.Player
@@ -35,17 +36,15 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var btnPrevious: ImageButton
     private lateinit var btnNext: ImageButton
     private lateinit var btnFavorite: ImageButton
-    private lateinit var btnShuffle: ImageButton
-    private lateinit var btnRepeat: ImageButton
     private lateinit var btnBack: ImageButton
+    private lateinit var btnComment: LinearLayout
+    private lateinit var btnShare: LinearLayout
     private lateinit var seekBar: SeekBar
     private lateinit var tvCurrentTime: TextView
     private lateinit var tvTotalTime: TextView
     
     private var vinylRotation: ObjectAnimator? = null
     private var isPlaying = false
-    private var isShuffle = false
-    private var isRepeat = false
     private var isFavorite = false
     private val handler = Handler(Looper.getMainLooper())
     private var updateSeekBarRunnable: Runnable? = null
@@ -99,9 +98,9 @@ class PlayerActivity : AppCompatActivity() {
         btnPrevious = findViewById(R.id.btnPrevious)
         btnNext = findViewById(R.id.btnNext)
         btnFavorite = findViewById(R.id.btnFavorite)
-        btnShuffle = findViewById(R.id.btnShuffle)
-        btnRepeat = findViewById(R.id.btnRepeat)
         btnBack = findViewById(R.id.btnBack)
+        btnComment = findViewById(R.id.btnComment)
+        btnShare = findViewById(R.id.btnShare)
         seekBar = findViewById(R.id.seekBar)
         tvCurrentTime = findViewById(R.id.tvCurrentTime)
         tvTotalTime = findViewById(R.id.tvTotalTime)
@@ -128,20 +127,6 @@ class PlayerActivity : AppCompatActivity() {
             toggleFavorite()
         }
 
-        btnShuffle.setOnClickListener {
-            isShuffle = !isShuffle
-            player.shuffleModeEnabled = isShuffle
-            btnShuffle.alpha = if (isShuffle) 1.0f else 0.5f
-            Toast.makeText(this, if (isShuffle) "Shuffle ON" else "Shuffle OFF", Toast.LENGTH_SHORT).show()
-        }
-
-        btnRepeat.setOnClickListener {
-            isRepeat = !isRepeat
-            player.repeatMode = if (isRepeat) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
-            btnRepeat.alpha = if (isRepeat) 1.0f else 0.5f
-            Toast.makeText(this, if (isRepeat) "Repeat ON" else "Repeat OFF", Toast.LENGTH_SHORT).show()
-        }
-
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -163,14 +148,14 @@ class PlayerActivity : AppCompatActivity() {
             }
         })
 
-        findViewById<ImageButton>(R.id.btnAddToPlaylist).setOnClickListener {
+        btnComment.setOnClickListener {
             currentSong?.let { song ->
-                Toast.makeText(this, "Add '${song.title}' to playlist", Toast.LENGTH_SHORT).show()
-                // TODO: Show playlist selection dialog
+                val commentsSheet = CommentsBottomSheet.newInstance(song._id)
+                commentsSheet.show(supportFragmentManager, "CommentsBottomSheet")
             }
         }
 
-        findViewById<ImageButton>(R.id.btnShare).setOnClickListener {
+        btnShare.setOnClickListener {
             currentSong?.let { song ->
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
@@ -179,11 +164,6 @@ class PlayerActivity : AppCompatActivity() {
                 }
                 startActivity(Intent.createChooser(shareIntent, "Share song via"))
             }
-        }
-
-        findViewById<ImageButton>(R.id.btnQueue).setOnClickListener {
-            Toast.makeText(this, "Queue feature coming soon", Toast.LENGTH_SHORT).show()
-            // TODO: Show queue dialog
         }
 
         // Menu button (3 dots)
@@ -227,7 +207,6 @@ class PlayerActivity : AppCompatActivity() {
                 R.id.action_add_playlist -> {
                     currentSong?.let { song ->
                         Toast.makeText(this, "Add '${song.title}' to playlist", Toast.LENGTH_SHORT).show()
-                        // TODO: Show playlist selection dialog
                     }
                     true
                 }
@@ -249,21 +228,18 @@ class PlayerActivity : AppCompatActivity() {
                 R.id.action_download -> {
                     currentSong?.let { song ->
                         Toast.makeText(this, "Download: ${song.title}", Toast.LENGTH_SHORT).show()
-                        // TODO: Implement download functionality
                     }
                     true
                 }
                 R.id.action_artist -> {
                     currentSong?.let { song ->
                         Toast.makeText(this, "Artist: ${song.artist.fullName}", Toast.LENGTH_SHORT).show()
-                        // TODO: Navigate to artist page
                     }
                     true
                 }
                 R.id.action_album -> {
                     currentSong?.let { song ->
                         Toast.makeText(this, "Album: ${song.album}", Toast.LENGTH_SHORT).show()
-                        // TODO: Navigate to album page
                     }
                     true
                 }
@@ -343,16 +319,12 @@ class PlayerActivity : AppCompatActivity() {
         tvSongTitle.text = song.title
         tvArtistName.text = song.artist.fullName
 
-        // Load album art into center circle only
         Glide.with(this)
             .load(song.coverImage)
             .placeholder(R.drawable.ic_default_album_art)
             .error(R.drawable.ic_default_album_art)
             .centerCrop()
             .into(imgAlbumArt)
-        
-        // Vinyl disc stays black (no image loading)
-        // imgVinyl uses vinyl_disc.xml drawable
     }
 
     private fun togglePlayPause() {
@@ -432,12 +404,10 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        // Không pause nhạc khi minimize activity
     }
 
     override fun onResume() {
         super.onResume()
-        // Sync lại state khi quay lại
         PlayerHolder.currentSong?.let { song ->
             currentSong = song
             updateUI(song)
