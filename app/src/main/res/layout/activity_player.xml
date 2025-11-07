@@ -198,19 +198,10 @@
                 android:paddingVertical="16dp">
 
                 <ImageButton
-                    android:id="@+id/btnShuffle"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_list"
-                    android:alpha="0.6"
-                    android:contentDescription="Shuffle"/>
-
-                <ImageButton
                     android:id="@+id/btnPrevious"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginHorizontal="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_prev"
                     android:contentDescription="Previous"/>
@@ -219,7 +210,7 @@
                     android:id="@+id/btnPlayPause"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginHorizontal="24dp"
                     android:src="@drawable/ic_play"
                     app:tint="@android:color/white"
                     app:fabSize="normal"
@@ -230,19 +221,10 @@
                     android:id="@+id/btnNext"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginHorizontal="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_next"
                     android:contentDescription="Next"/>
-
-                <ImageButton
-                    android:id="@+id/btnRepeat"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_list"
-                    android:alpha="0.6"
-                    android:contentDescription="Repeat"/>
             </LinearLayout>
 
             <!-- Additional Controls -->
@@ -251,37 +233,62 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:paddingTop="8dp">
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp">
 
-                <ImageButton
-                    android:id="@+id/btnAddToPlaylist"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="12dp"
+                <LinearLayout
+                    android:id="@+id/btnComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_add"
-                    android:alpha="0.7"
-                    android:contentDescription="Add to Playlist"/>
+                    android:padding="12dp"
+                    android:layout_marginHorizontal="8dp">
 
-                <ImageButton
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_comment"
+                        app:tint="#424242"
+                        android:contentDescription="Comments"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Comments"
+                        android:textSize="14sp"
+                        android:textColor="#424242"
+                        android:layout_marginStart="8dp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/btnShare"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_search"
-                    android:alpha="0.7"
-                    android:contentDescription="Share"/>
+                    android:padding="12dp"
+                    android:layout_marginHorizontal="8dp">
 
-                <ImageButton
-                    android:id="@+id/btnQueue"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="12dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_list"
-                    android:alpha="0.7"
-                    android:contentDescription="Queue"/>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_share"
+                        app:tint="#424242"
+                        android:contentDescription="Share"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Share"
+                        android:textSize="14sp"
+                        android:textColor="#424242"
+                        android:layout_marginStart="8dp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

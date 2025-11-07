@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FF5500</color>
     <color name="colorPrimaryVariant">#E64A00</color>
@@ -7,4 +8,7 @@
     <color name="textColorPrimary">#000000</color>
     <color name="textColorSecondary">#000000</color>
     <color name="cardColor">#F5F5F5</color>
+
+    <color name="red">#F44336</color>
+    <color name="gray">#757575</color>
 </resources>
