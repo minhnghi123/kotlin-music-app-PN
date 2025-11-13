@@ -69,12 +69,14 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun play(song: Song) {
+        val artistName = song.artist.firstOrNull()?.fullName ?: "Unknown Artist"
+        
         val mediaItem = MediaItem.Builder()
             .setUri(song.fileUrl)
             .setMediaMetadata(
                 MediaMetadata.Builder()
                     .setTitle(song.title)
-                    .setArtist(song.artist.fullName)
+                    .setArtist(artistName)
                     .setArtworkUri(Uri.parse(song.coverImage ?: ""))
                     .build()
             )
@@ -85,7 +87,6 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
         player.play()
         _currentSong.postValue(song)
         
-        // Lưu vào PlayerHolder để PlayerActivity có thể access
         PlayerHolder.currentSong = song
     }
 
