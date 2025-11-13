@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -15,158 +14,155 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingHorizontal="24dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="32dp">
 
-            <!-- Header with back button -->
+            <!-- 🎯 Minimal Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingVertical="8dp">
+                android:paddingVertical="12dp">
 
                 <ImageButton
                     android:id="@+id/btnBack"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_back"
+                    android:tint="#1E1E1E"
                     android:contentDescription="Back"/>
 
                 <TextView
+                    android:id="@+id/tvHeaderTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Now Playing"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:textSize="14sp"
                     android:textColor="#1E1E1E"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginHorizontal="16dp"/>
 
                 <ImageButton
                     android:id="@+id/btnMenu"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_more"
+                    android:tint="#1E1E1E"
                     android:contentDescription="Menu"/>
             </LinearLayout>
 
-            <!-- Album Art with Vinyl Effect -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="32dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="12dp"
-                app:strokeWidth="0dp">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="24dp">
-
-                    <!-- Vinyl Disc Background (Black with grooves) -->
-                    <ImageView
-                        android:id="@+id/imgVinyl"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/vinyl_disc"
-                        android:scaleType="fitCenter"/>
-
-                    <!-- Album Cover on top (smaller, in center) -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="60dp"
-                        app:cardCornerRadius="200dp"
-                        app:cardElevation="8dp">
-
-                        <ImageView
-                            android:id="@+id/imgAlbumArt"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/ic_default_album_art"/>
-                    </com.google.android.material.card.MaterialCardView>
-                </FrameLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Song Info Card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- 🎵 Clean TabLayout -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                android:layout_marginTop="8dp"
+                android:background="@android:color/transparent"
+                app:tabMode="fixed"
+                app:tabGravity="fill"
+                app:tabSelectedTextColor="#1E1E1E"
+                app:tabTextColor="#999999"
+                app:tabIndicatorColor="#1E1E1E"
+                app:tabIndicatorHeight="2dp"
+                app:tabRippleColor="@android:color/transparent">
+                
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cover"/>
+                
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lyrics"/>
+            </com.google.android.material.tabs.TabLayout>
+
+            <!-- 📱 ViewPager2 -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="420dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="32dp"/>
+
+            <!-- 🎼 Song Info - Clean Design -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="32dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/tvSongTitle"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:text="Song Title"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E1E1E"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:lineSpacingExtra="4dp"/>
 
-                        <TextView
-                            android:id="@+id/tvSongTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Song Title"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:textColor="#1E1E1E"
-                            android:maxLines="2"
-                            android:ellipsize="end"/>
-
-                        <TextView
-                            android:id="@+id/tvArtistName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Artist Name"
-                            android:textSize="16sp"
-                            android:textColor="#757575"
-                            android:layout_marginTop="4dp"
-                            android:maxLines="1"
-                            android:ellipsize="end"/>
-                    </LinearLayout>
-
-                    <ImageButton
-                        android:id="@+id/btnFavorite"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_favorite_border"
-                        android:contentDescription="Favorite"/>
+                    <TextView
+                        android:id="@+id/tvArtistName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Artist Name"
+                        android:textSize="16sp"
+                        android:textColor="#757575"
+                        android:layout_marginTop="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Progress Section -->
+                <ImageButton
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_favorite_border"
+                    android:tint="#1E1E1E"
+                    android:contentDescription="Favorite"
+                    android:layout_marginStart="16dp"/>
+            </LinearLayout>
+
+            <!-- 🎚️ Progress - Minimal Style -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="24dp">
 
                 <SeekBar
                     android:id="@+id/seekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progressTint="?attr/colorPrimary"
-                    android:thumbTint="?attr/colorPrimary"/>
+                    android:progressTint="#1E1E1E"
+                    android:thumbTint="#1E1E1E"
+                    android:progressBackgroundTint="#E0E0E0"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="4dp">
+                    android:layout_marginTop="8dp">
 
                     <TextView
                         android:id="@+id/tvCurrentTime"
@@ -189,106 +185,78 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Control Buttons -->
+            <!-- 🎛️ Control Buttons - Clean Minimal -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:paddingVertical="16dp">
+                android:layout_marginBottom="24dp">
 
                 <ImageButton
                     android:id="@+id/btnPrevious"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginEnd="24dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_prev"
+                    android:tint="#1E1E1E"
+                    android:scaleX="1.1"
+                    android:scaleY="1.1"
                     android:contentDescription="Previous"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/btnPlayPause"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
                     android:src="@drawable/ic_play"
                     app:tint="@android:color/white"
+                    app:backgroundTint="#1E1E1E"
                     app:fabSize="normal"
-                    app:elevation="8dp"
+                    app:elevation="0dp"
+                    app:borderWidth="0dp"
+                    app:fabCustomSize="72dp"
                     android:contentDescription="Play/Pause"/>
 
                 <ImageButton
                     android:id="@+id/btnNext"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginStart="24dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_next"
+                    android:tint="#1E1E1E"
+                    android:scaleX="1.1"
+                    android:scaleY="1.1"
                     android:contentDescription="Next"/>
             </LinearLayout>
 
-            <!-- Additional Controls -->
+            <!-- 💬 Additional Controls - Icon Only -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp">
+                android:gravity="center">
 
-                <LinearLayout
+                <ImageButton
                     android:id="@+id/btnComment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="12dp"
-                    android:layout_marginHorizontal="8dp">
+                    android:src="@drawable/ic_comment"
+                    android:tint="#1E1E1E"
+                    android:contentDescription="Comments"/>
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_comment"
-                        app:tint="#424242"
-                        android:contentDescription="Comments"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Comments"
-                        android:textSize="14sp"
-                        android:textColor="#424242"
-                        android:layout_marginStart="8dp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <LinearLayout
+                <ImageButton
                     android:id="@+id/btnShare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="12dp"
-                    android:layout_marginHorizontal="8dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_share"
-                        app:tint="#424242"
-                        android:contentDescription="Share"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Share"
-                        android:textSize="14sp"
-                        android:textColor="#424242"
-                        android:layout_marginStart="8dp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
+                    android:src="@drawable/ic_share"
+                    android:tint="#1E1E1E"
+                    android:contentDescription="Share"/>
             </LinearLayout>
 
         </LinearLayout>

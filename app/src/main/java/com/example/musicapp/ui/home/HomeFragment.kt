@@ -1,3 +1,4 @@
+
 package com.example.musicapp.ui.home
 
 import android.content.Intent
@@ -92,6 +93,14 @@ class HomeFragment : Fragment() {
 
         viewModel = ViewModelProvider(this)[SongViewModel::class.java]
         viewModel.songs.observe(viewLifecycleOwner) { list ->
+            android.util.Log.d("HomeFragment", "=== Loaded ${list.size} songs ===")
+            list.take(3).forEach { song ->
+                android.util.Log.d("HomeFragment", "Song: ${song.title}")
+                android.util.Log.d("HomeFragment", "  Artists: ${song.artist.size} items")
+                song.artist.forEach { artist ->
+                    android.util.Log.d("HomeFragment", "    - ${artist.fullName}")
+                }
+            }
             adapter.submit(list)
         }
         viewModel.error.observe(viewLifecycleOwner) { err ->
@@ -130,19 +139,35 @@ class HomeFragment : Fragment() {
                 call: Call<SongListResponse>,
                 response: Response<SongListResponse>
             ) {
+                android.util.Log.d("HomeFragment", "=== Suggestions API Response ===")
+                android.util.Log.d("HomeFragment", "Response code: ${response.code()}")
+                android.util.Log.d("HomeFragment", "Response body: ${response.body()}")
+                
                 if (response.isSuccessful && response.body()?.data != null) {
                     val songs = response.body()!!.data
+                    android.util.Log.d("HomeFragment", "Loaded ${songs.size} suggested songs")
+                    
+                    // Log artist của 2 bài đầu
+                    songs.take(2).forEach { song ->  // 👈 Sửa từ "=>" thành "->"
+                        android.util.Log.d("HomeFragment", "Song: ${song.title}")
+                        android.util.Log.d("HomeFragment", "  Artists: ${song.artist.size} items")
+                        song.artist.forEach { artist ->
+                            android.util.Log.d("HomeFragment", "    - ${artist.fullName}")
+                        }
+                    }
+                    
                     suggestionAdapter.submit(songs)
                 } else {
-                    Toast.makeText(requireContext(), "Không có dữ liệu gợi ý", Toast.LENGTH_SHORT)
-                        .show()
+                    android.util.Log.e("HomeFragment", "No suggestion data or failed")
+                    Toast.makeText(requireContext(), "Không có dữ liệu gợi ý", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<SongListResponse>, t: Throwable) {
+                android.util.Log.e("HomeFragment", "API lỗi: ${t.message}", t)
+                t.printStackTrace()
                 if (isAdded) {
-                    Toast.makeText(requireContext(), "API lỗi: ${t.message}", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(requireContext(), "API lỗi: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -456,3 +481,4 @@ class HomeFragment : Fragment() {
     }
 
 }
+
