@@ -125,10 +125,12 @@ class MainActivity : AppCompatActivity() {
      */
     fun showMiniPlayer(song: Song) {
         playerVM.play(song)
+        val artistName = song.artist.firstOrNull()?.fullName ?: "Unknown Artist"
+        
         val intent = Intent(this, MusicService::class.java).apply {
             action = MusicActions.ACTION_PLAY
             putExtra("SONG_TITLE", song.title)
-            putExtra("SONG_ARTIST", song.artist.fullName)
+            putExtra("SONG_ARTIST", artistName)
             putExtra("SONG_URL", song.fileUrl)
         }
         ContextCompat.startForegroundService(this, intent)

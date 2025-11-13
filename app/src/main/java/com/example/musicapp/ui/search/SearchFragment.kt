@@ -129,10 +129,10 @@ class SearchFragment : Fragment() {
 
         val results = allSongs.filter { song ->
             when (filter) {
-                "Tất cả" -> song.title.contains(query, true)
-                        || song.artist.fullName.contains(query, true)
+                "Tất cả" -> song.title.contains(query, true) ||
+                        song.artist.any { it.fullName.contains(query, true) }
                 "Thể loại" -> song.topic.any { it.contains(query, true) }
-                "Nghệ sĩ" -> song.artist.fullName.contains(query, true)
+                "Nghệ sĩ" -> song.artist.any { it.fullName.contains(query, true) }
                 else -> false
             }
         }
@@ -187,7 +187,7 @@ class SearchFragment : Fragment() {
     // ================= Lưu và lấy lịch sử =================
 
     private fun addToRecentSearch(song: Song) {
-        if (recentSearches.none { it.title == song.title && it.artist.fullName == song.artist.fullName }) {
+        if (recentSearches.none { it.title == song.title && song.artist.joinToString(", ") { it.fullName }== song.artist.joinToString(", ") { it.fullName } }) {
             recentSearches.add(0, song)
             if (recentSearches.size > 10) recentSearches.removeAt(recentSearches.lastIndex)
             recentAdapter.updateData(recentSearches)

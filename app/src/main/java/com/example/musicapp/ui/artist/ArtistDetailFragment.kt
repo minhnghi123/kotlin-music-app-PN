@@ -124,7 +124,7 @@ class ArtistDetailFragment : Fragment() {
                         com.example.musicapp.models.songs.Song(
                             _id = s._id,
                             title = s.title,
-                            artist = body.artist,
+                            artist = listOf(body.artist), // 👈 Wrap body.artist thành List
                             album = s.album ?: "",
                             topic = s.topic ?: emptyList(),
                             fileUrl = s.fileUrl ?: "",
@@ -190,5 +190,24 @@ class ArtistDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "Không tải được danh sách ca sĩ: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun displayArtistInfo(artist: com.example.musicapp.models.artists.Artist) {
+        tvArtistName.text = artist.fullName
+        tvArtistCountry.text = artist.country
+
+        Glide.with(requireContext())
+            .load(artist.coverImage)
+            .placeholder(R.drawable.ic_user)
+            .error(R.drawable.ic_default_album_art)
+            .centerCrop()
+            .into(ivArtistCover)
+    }
+
+    private fun displayArtistSongs(songs: List<com.example.musicapp.models.songs.Song>) {
+        val adapter = SongAdapter(songs) { song ->
+            (activity as? com.example.musicapp.MainActivity)?.showMiniPlayer(song)
+        }
+        rvSongs.adapter = adapter
     }
 }
