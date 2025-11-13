@@ -3,7 +3,6 @@ package com.example.musicapp.models.songs
 import android.util.Log
 import com.example.musicapp.models.artists.Artist
 import com.google.gson.*
-import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 class SongDeserializer : JsonDeserializer<Song> {
@@ -52,14 +51,18 @@ class SongDeserializer : JsonDeserializer<Song> {
             when {
                 // Case 1: Array của artists
                 element.isJsonArray -> {
-                    Log.d("SongDeserializer", "Parsing artist as ARRAY")
+                    Log.d("SongDeserializer", "Parsing artist as ARRAY, size=${element.asJsonArray.size()}")
                     val list = mutableListOf<Artist>()
-                    element.asJsonArray.forEach { item ->
+                    element.asJsonArray.forEachIndexed { index, item ->
                         try {
-                            val artist = context?.deserialize<Artist>(item, Artist::class.java)
-                            if (artist != null) list.add(artist)
+                            // Parse từng artist trong array
+                            val artist = parseSingleArtist(item, context)
+                            if (artist != null) {
+                                list.add(artist)
+                                Log.d("SongDeserializer", "  [${index}] Parsed: ${artist.fullName}")
+                            }
                         } catch (e: Exception) {
-                            Log.e("SongDeserializer", "Failed to parse artist: ${e.message}")
+                            Log.e("SongDeserializer", "  [${index}] Failed to parse artist: ${e.message}")
                         }
                     }
                     list
@@ -68,13 +71,8 @@ class SongDeserializer : JsonDeserializer<Song> {
                 // Case 2: Object đơn
                 element.isJsonObject -> {
                     Log.d("SongDeserializer", "Parsing artist as OBJECT")
-                    try {
-                        val artist = context?.deserialize<Artist>(element, Artist::class.java)
-                        if (artist != null) listOf(artist) else emptyList()
-                    } catch (e: Exception) {
-                        Log.e("SongDeserializer", "Failed to parse single artist: ${e.message}")
-                        emptyList()
-                    }
+                    val artist = parseSingleArtist(element, context)
+                    if (artist != null) listOf(artist) else emptyList()
                 }
                 
                 // Case 3: String (ID)
@@ -96,6 +94,57 @@ class SongDeserializer : JsonDeserializer<Song> {
         } catch (e: Exception) {
             Log.e("SongDeserializer", "Error parsing artists: ${e.message}", e)
             emptyList()
+        }
+    }
+    
+    // 👇 Helper: Parse từng artist object (xử lý cả nested và flat)
+    private fun parseSingleArtist(
+        element: JsonElement?,
+        context: JsonDeserializationContext?
+    ): Artist? {
+        if (element == null || element.isJsonNull) return null
+        
+        return try {
+            when {
+                // Nếu là object
+                element.isJsonObject -> {
+                    val obj = element.asJsonObject
+                    
+                    // Kiểm tra có phải nested artist không (có field "artist" bên trong)
+                    val nestedArtist = obj.get("artist")
+                    if (nestedArtist != null && nestedArtist.isJsonObject) {
+                        Log.d("SongDeserializer", "Found nested artist object")
+                        parseSingleArtist(nestedArtist, context)
+                    } else {
+                        // Parse trực tiếp
+                        Artist(
+                            _id = obj.get("_id")?.asString 
+                                ?: obj.get("id")?.asString 
+                                ?: "",
+                            fullName = obj.get("fullName")?.asString 
+                                ?: obj.get("name")?.asString 
+                                ?: "Unknown Artist",
+                            country = obj.get("country")?.asString ?: "",
+                            coverImage = obj.get("coverImage")?.asString
+                        )
+                    }
+                }
+                
+                // Nếu là string ID
+                element.isJsonPrimitive && element.asJsonPrimitive.isString -> {
+                    Artist(
+                        _id = element.asString,
+                        fullName = "Unknown Artist",
+                        country = "",
+                        coverImage = null
+                    )
+                }
+                
+                else -> null
+            }
+        } catch (e: Exception) {
+            Log.e("SongDeserializer", "Error parsing single artist: ${e.message}", e)
+            null
         }
     }
     

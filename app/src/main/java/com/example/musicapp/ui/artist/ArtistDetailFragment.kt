@@ -105,26 +105,50 @@ class ArtistDetailFragment : Fragment() {
     }
 
     private fun loadArtistSongs(artistId: String) {
+        android.util.Log.d("ArtistDetailFragment", "=== Loading artist: $artistId ===")
+        
         ApiClient.api.getArtistDetail(artistId).enqueue(object : Callback<ArtistDetailResponse> {
             override fun onResponse(
                 call: Call<ArtistDetailResponse>,
                 response: Response<ArtistDetailResponse>
             ) {
                 if (!isAdded) return
+                
+                android.util.Log.d("ArtistDetailFragment", "Response code: ${response.code()}")
+                
                 if (response.isSuccessful && response.body() != null) {
                     val body = response.body()!!
+                    
+                    android.util.Log.d("ArtistDetailFragment", "Artist: ${body.artist.fullName}")
+                    android.util.Log.d("ArtistDetailFragment", "Country: ${body.artist.country}")
+                    android.util.Log.d("ArtistDetailFragment", "Cover: ${body.artist.coverImage}")
+                    android.util.Log.d("ArtistDetailFragment", "Songs: ${body.songs.size}")
+                    
+                    // Update UI
                     tvArtistName.text = body.artist.fullName
-                    Glide.with(requireContext()).load(body.artist.coverImage).into(ivArtistCover)
-
-                    // thông tin chi tiết ca sĩ
                     tvArtistRealName.text = "Tên thật: ${body.artist.fullName}"
                     tvArtistCountry.text = "Quốc gia: ${body.artist.country}"
+                    
+                    // Load artist cover
+                    Glide.with(requireContext())
+                        .load(body.artist.coverImage)
+                        .placeholder(R.drawable.ic_user)
+                        .error(R.drawable.ic_default_album_art)
+                        .centerCrop()
+                        .into(ivArtistCover)
 
+                    // Convert SongForArtist to Song
                     fullSongList = body.songs.map { s ->
+                        android.util.Log.d("ArtistDetailFragment", "  Song: ${s.title}")
+                        android.util.Log.d("ArtistDetailFragment", "    Artists: ${s.artist.size}")
+                        s.artist.forEach {
+                            android.util.Log.d("ArtistDetailFragment", "      - ${it.fullName}")
+                        }
+                        
                         com.example.musicapp.models.songs.Song(
                             _id = s._id,
                             title = s.title,
-                            artist = listOf(body.artist), // 👈 Wrap body.artist thành List
+                            artist = s.artist, // SongForArtistDeserializer đã parse đúng
                             album = s.album ?: "",
                             topic = s.topic ?: emptyList(),
                             fileUrl = s.fileUrl ?: "",
@@ -139,15 +163,16 @@ class ArtistDetailFragment : Fragment() {
                         )
                     }
 
-                    // ban đầu hiển thị 5 bài hát
                     showLimitedSongs()
                 } else {
+                    android.util.Log.e("ArtistDetailFragment", "Response not successful")
                     Toast.makeText(requireContext(), "Lỗi tải artist detail", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<ArtistDetailResponse>, t: Throwable) {
                 if (!isAdded) return
+                android.util.Log.e("ArtistDetailFragment", "API error: ${t.message}", t)
                 Toast.makeText(requireContext(), "API lỗi: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })

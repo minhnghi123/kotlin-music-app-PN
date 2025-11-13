@@ -5,6 +5,8 @@ import com.example.musicapp.models.artists.Artist
 import com.example.musicapp.models.songs.ArtistDeserializer
 import com.example.musicapp.models.songs.Song
 import com.example.musicapp.models.songs.SongDeserializer
+import com.example.musicapp.models.songs.SongForArtist
+import com.example.musicapp.models.songs.SongForArtistDeserializer
 import com.example.musicapp.models.users.UserResponse
 import com.example.musicapp.utils.CookieManager
 import com.google.gson.GsonBuilder
@@ -52,9 +54,10 @@ object ApiClient {
 
     // 👇 QUAN TRỌNG: Gson với ArtistDeserializer
     private val gson by lazy {
-        android.util.Log.d("ApiClient", "=== Creating Gson with SongDeserializer ===")
+        android.util.Log.d("ApiClient", "=== Creating Gson with custom deserializers ===")
         GsonBuilder()
             .registerTypeAdapter(Song::class.java, SongDeserializer())
+            .registerTypeAdapter(SongForArtist::class.java, SongForArtistDeserializer())
             .setLenient()
             .create()
     }
