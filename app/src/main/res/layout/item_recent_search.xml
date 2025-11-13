@@ -27,7 +27,8 @@
             android:textStyle="bold"
             android:textSize="15sp"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:textColor="?android:textColorPrimary" />
 
         <TextView
             android:id="@+id/tvArtist"
