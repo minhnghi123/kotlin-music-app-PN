@@ -1,6 +1,5 @@
 package com.example.musicapp.network
 
-import com.example.musicapp.models.artists.Artist
 import com.example.musicapp.models.artists.ArtistDetailResponse
 import com.example.musicapp.models.artists.ArtistResponse
 import com.example.musicapp.models.auth.ApiResponse
@@ -18,7 +17,6 @@ import com.example.musicapp.models.songs.Song
 import com.example.musicapp.models.songs.SongListResponse
 import com.example.musicapp.models.songs.SongResponse
 import com.example.musicapp.models.users.ChangePasswordRequest
-import com.example.musicapp.models.users.UpdateMeRequest
 import com.example.musicapp.models.users.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -62,12 +60,11 @@ interface ApiService {
     @PUT("user/me/change-password")
     fun changePassword(@Body request: ChangePasswordRequest): Call<UserResponse>
 
-//    Phan cho Song
+    // Phan cho Song
     @GET("/music/songs")
     fun getSongs():Call<ApiListResponse<Song>>
     @GET("/music/songs/{id}")
     fun getSongDetail(@Path("id") id:String): Call<SongResponse>
-
 
 
 //    Phan cho Playlist
@@ -82,7 +79,7 @@ interface ApiService {
 
     @GET("playlist/{id}")
     fun getPlaylistDetail(@Path("id") playlistId: String): Call<PlaylistDetailResponse>
-// Phan cho arist
+    // Phan cho arist
     @GET("music/artists")
     fun getHotArtists(): Call<ArtistResponse>
 
@@ -121,4 +118,6 @@ interface ApiService {
 
     @POST("comments/{commentId}/like")
     suspend fun likeComment(@Path("commentId") commentId: String): Response<AddCommentResponse>
+
+    // Phan cho Topics
 }
