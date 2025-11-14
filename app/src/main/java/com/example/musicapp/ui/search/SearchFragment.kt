@@ -224,7 +224,7 @@ class SearchFragment : Fragment() {
                 this.text = text
                 setPadding(36, 18, 36, 18)
                 setBackgroundResource(R.drawable.bg_tag_suggestion)
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.textPrimary))
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.textColorPrimary))
                 textSize = 14f
                 setSingleLine(true)
                 ellipsize = TextUtils.TruncateAt.END

@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#1E1E1E</color>
@@ -12,5 +11,7 @@
 
     <color name="red">#F44336</color>
     <color name="gray">#757575</color>
+    
+    <!-- 👇 Thêm nếu chưa có -->
+    <color name="background">#FFFFFF</color>
 </resources>
-

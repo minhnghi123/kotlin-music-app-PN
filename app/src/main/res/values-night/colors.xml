@@ -1,15 +1,10 @@
 <resources>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <color name="colorPrimary">#FF784E</color>
+    <color name="colorPrimaryVariant">#FF5500</color>
+    <color name="colorOnPrimary">#000000</color>
 
-    <color name="primary">#9B4DFF</color>
-    <color name="primaryDark">#5B1BB2</color>
-    <color name="accent">#00FFFF</color>
-
-    <color name="background">#0D0D0D</color>
-    <color name="textPrimary">#FFFFFF</color>
-
-    <color name="colorTextPrimary">#FFFFFF</color>   <!-- trắng -->
-    <color name="colorTextSecondary">#CCCCCC</color> <!-- xám nhạt -->
-
+    <color name="backgroundColor">#121212</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#000000</color>
+    <color name="cardColor">#1E1E1E</color>
 </resources>
