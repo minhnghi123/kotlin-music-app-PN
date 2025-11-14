@@ -1,3 +1,4 @@
+
 package com.example.musicapp.ui.home
 
 import android.content.Intent
@@ -480,3 +481,4 @@ class HomeFragment : Fragment() {
     }
 
 }
+

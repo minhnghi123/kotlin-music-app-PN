@@ -14,7 +14,8 @@
         android:text="1"
         android:textStyle="bold"
         android:textSize="16sp"
-        android:layout_marginEnd="8dp"/>
+        android:layout_marginEnd="8dp"
+        android:textColor="#000000"/>
 
     <!-- Cover -->
     <ImageView
@@ -41,7 +42,8 @@
             android:textStyle="bold"
             android:textSize="14sp"
             android:ellipsize="end"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textColor="?android:textColorPrimary" />
 
         <TextView
             android:id="@+id/txtArtist"
