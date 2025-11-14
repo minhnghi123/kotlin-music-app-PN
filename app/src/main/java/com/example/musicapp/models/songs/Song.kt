@@ -5,7 +5,7 @@ import com.example.musicapp.models.artists.Artist
 data class Song(
     val _id: String,
     val title: String,
-    val artist: Artist,
+    val artist: List<Artist>,
     val album: String,
     val topic: List<String>,
     val fileUrl: String,

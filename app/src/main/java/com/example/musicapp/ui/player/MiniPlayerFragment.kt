@@ -39,7 +39,7 @@ class MiniPlayerFragment : Fragment() {
             view.isVisible = song != null
             if (song != null) {
                 txtTitle.text = song.title
-                txtArtist.text = song.artist.fullName
+                txtArtist.text = song.artist.joinToString { it.fullName }
                 Glide.with(this)
                     .load(song.coverImage)
                     .placeholder(R.mipmap.ic_launcher)

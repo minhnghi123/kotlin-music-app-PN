@@ -124,7 +124,7 @@ class ArtistDetailFragment : Fragment() {
                         com.example.musicapp.models.songs.Song(
                             _id = s._id,
                             title = s.title,
-                            artist = body.artist,
+                            artist = body.artist?.let { listOf(it) } ?: emptyList(),
                             album = s.album ?: "",
                             topic = s.topic ?: emptyList(),
                             fileUrl = s.fileUrl ?: "",

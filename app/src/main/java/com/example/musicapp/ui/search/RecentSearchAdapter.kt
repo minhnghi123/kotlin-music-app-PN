@@ -32,7 +32,11 @@ class RecentSearchAdapter(
     override fun onBindViewHolder(holder: RecentSearchViewHolder, position: Int) {
         val song = recentSongs[position]
         holder.tvTitle.text = song.title
-        holder.tvArtist.text = song.artist?.fullName ?: "Không rõ ca sĩ"
+        holder.tvArtist.text =
+            if (song.artist.isNotEmpty())
+                song.artist.joinToString(", ") { it.fullName }
+            else
+                "Không rõ ca sĩ"
 
         Glide.with(holder.itemView.context)
             .load(song.coverImage)

@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, MusicService::class.java).apply {
             action = MusicActions.ACTION_PLAY
             putExtra("SONG_TITLE", song.title)
-            putExtra("SONG_ARTIST", song.artist.fullName)
+            putExtra("SONG_ARTIST", song.artist.joinToString { it.fullName })
             putExtra("SONG_URL", song.fileUrl)
         }
         ContextCompat.startForegroundService(this, intent)

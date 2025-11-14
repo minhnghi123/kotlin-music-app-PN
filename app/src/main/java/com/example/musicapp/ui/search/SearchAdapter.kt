@@ -32,7 +32,7 @@ class SearchAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val song = items[position]
         holder.tvTitle.text = song.title
-        holder.tvArtist.text = song.artist.fullName
+        holder.tvArtist.text = song.artist.joinToString { it.fullName }
 
         Glide.with(holder.itemView.context)
             .load(song.coverImage)

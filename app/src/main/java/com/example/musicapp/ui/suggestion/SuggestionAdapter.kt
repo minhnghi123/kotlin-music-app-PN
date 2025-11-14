@@ -40,7 +40,7 @@ class SuggestionAdapter(
     override fun onBindViewHolder(holder: SuggestionVH, position: Int) {
         val song = items[position]
         holder.txtTitle.text = song.title
-        holder.txtArtist.text = song.artist.fullName
+        holder.txtArtist.text = song.artist.joinToString { it.fullName }
 
         Glide.with(holder.itemView)
             .load(song.coverImage)

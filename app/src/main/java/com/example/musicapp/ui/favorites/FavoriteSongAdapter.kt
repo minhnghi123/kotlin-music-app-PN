@@ -61,7 +61,7 @@ class FavoriteSongAdapter(
 
             // Title + Artist
             holder.txtTitle.text = song.title
-            holder.txtArtist.text = song.artist.fullName
+            holder.txtArtist.text = song.artist.joinToString { it.fullName }
 
             // Load ảnh cover
             Glide.with(holder.itemView)

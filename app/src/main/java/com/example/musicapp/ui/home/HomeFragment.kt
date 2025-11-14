@@ -30,7 +30,6 @@ import com.example.musicapp.models.songs.SongListResponse
 import com.example.musicapp.models.users.UserResponse
 import com.example.musicapp.network.ApiClient
 import com.example.musicapp.data.FavoriteSongsRepository
-import com.example.musicapp.ui.auth.LoginActivity
 import com.example.musicapp.ui.artist.ArtistAdapter
 import com.example.musicapp.ui.artist.ArtistDetailFragment
 import com.example.musicapp.ui.playlists.PlaylistAdapter
@@ -55,7 +54,7 @@ class HomeFragment : Fragment() {
 
     // Header UI
     private var headerLayout: View? = null
-    private var btnLogin: Button? = null
+    private var trangChu: TextView? = null
     private var imgAvatar: ImageView? = null
     private var tvWelcome: TextView? = null
     private var tvUserName: TextView? = null
@@ -149,7 +148,7 @@ class HomeFragment : Fragment() {
 
         // Header mapping
         headerLayout = view.findViewById(R.id.headerLayout)
-        btnLogin = view.findViewById(R.id.btnLogin)
+        trangChu = view.findViewById(R.id.trangChu)
         imgAvatar = view.findViewById(R.id.imgAvatar)
         tvWelcome = view.findViewById(R.id.tvWelcome)
         tvUserName = view.findViewById(R.id.tvUserName)
@@ -225,7 +224,7 @@ class HomeFragment : Fragment() {
             val cachedAvatar = PreferenceHelper.getAvatar(requireContext())
 
             headerLayout?.visibility = View.VISIBLE
-            btnLogin?.visibility = View.GONE
+            trangChu?.visibility = View.GONE
             imgAvatar?.visibility = View.VISIBLE
             userInfoLayout?.visibility = View.VISIBLE
 
@@ -246,14 +245,9 @@ class HomeFragment : Fragment() {
 
         } else {
             headerLayout?.visibility = View.VISIBLE
-            btnLogin?.visibility = View.VISIBLE
+            trangChu?.visibility = View.VISIBLE
             imgAvatar?.visibility = View.GONE
             userInfoLayout?.visibility = View.GONE
-
-            btnLogin?.setOnClickListener {
-                val intent = Intent(requireContext(), LoginActivity::class.java)
-                startActivity(intent)
-            }
         }
     }
 

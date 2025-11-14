@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.musicapp.MainActivity
 import com.example.musicapp.R
@@ -23,8 +24,7 @@ class SettingActivity : AppCompatActivity() {
 
     private lateinit var ivAvatar: ImageView
     private lateinit var tvUsername: TextView
-    private lateinit var tvEmail: TextView
-    private lateinit var btnEditProfile: Button
+    private lateinit var btnEditProfile: TextView
     private lateinit var btnAuth: Button
     private lateinit var switchDarkMode: Switch
 
@@ -35,7 +35,6 @@ class SettingActivity : AppCompatActivity() {
         // ánh xạ view
         ivAvatar = findViewById(R.id.ivAvatar)
         tvUsername = findViewById(R.id.tvUsername)
-        tvEmail = findViewById(R.id.tvEmail)
         btnEditProfile = findViewById(R.id.btnEditProfile)
         btnAuth = findViewById(R.id.btnLogout)
         switchDarkMode = findViewById(R.id.switchDarkMode)
@@ -65,22 +64,26 @@ class SettingActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
-
     private fun updateUI() {
         val isLoggedIn = ApiClient.cookieManager?.getCookie() != null
+        btnAuth.visibility = View.VISIBLE
 
         if (isLoggedIn) {
+            // --- TRẠNG THÁI ĐÃ ĐĂNG NHẬP ---
             fetchUserData()
-            btnEditProfile.visibility = View.VISIBLE
-            ivAvatar.visibility = View.VISIBLE
-            tvUsername.visibility = View.VISIBLE
-            tvEmail.visibility = View.VISIBLE
 
+            // Hiển thị thông tin người dùng
+            tvUsername.visibility = View.VISIBLE
+            ivAvatar.visibility = View.VISIBLE
+            btnEditProfile.visibility = View.VISIBLE
+
+            // Cấu hình nút Đăng xuất
             btnAuth.text = "Đăng xuất"
             btnAuth.setOnClickListener {
                 logout()
             }
 
+            // Cấu hình nút Chi tiết thông tin
             btnEditProfile.setOnClickListener {
                 val fragment = ProfileDetailFragment()
                 supportFragmentManager.beginTransaction()
@@ -90,16 +93,23 @@ class SettingActivity : AppCompatActivity() {
             }
 
         } else {
-            btnEditProfile.visibility = View.GONE
-            ivAvatar.visibility = View.GONE
-            tvUsername.visibility = View.GONE
-            tvEmail.visibility = View.GONE
+            // --- TRẠNG THÁI CHƯA ĐĂNG NHẬP ---
 
+            // Ẩn thông tin người dùng và nút chi tiết
+            tvUsername.visibility = View.GONE
+            ivAvatar.visibility = View.GONE
+            btnEditProfile.visibility = View.GONE
+
+            // Cấu hình nút Đăng nhập
             btnAuth.text = "Đăng nhập"
             btnAuth.setOnClickListener {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             }
+
+            // Đặt avatar mặc định (để tránh hiển thị ảnh cũ nếu Glide chưa kịp chạy)
+            ivAvatar.setImageResource(R.drawable.ic_user)
+            tvUsername.text = ""
         }
     }
 
@@ -110,7 +120,6 @@ class SettingActivity : AppCompatActivity() {
                     val user = response.body()!!.data
 
                     tvUsername.text = user.username
-                    tvEmail.text = user.email
 
                     if (!this@SettingActivity.isDestroyed && !this@SettingActivity.isFinishing) {
                         Glide.with(this@SettingActivity)

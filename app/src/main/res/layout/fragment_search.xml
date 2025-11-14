@@ -11,21 +11,22 @@
         android:layout_height="wrap_content"
         android:hint="Tìm bài hát, nghệ sĩ, album..."
         android:drawableStart="@drawable/ic_search"
+        android:drawableTint="@color/icon_tint_color"
+        android:textColorHint="@color/icon_tint_color"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:singleLine="true"
         android:padding="12dp"
         android:background="@drawable/bg_search"
-        android:layout_marginTop="35dp"/>
+        android:layout_marginTop="35dp"
+        android:textColor="@color/textColorPrimary"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent" />
 
-    <Spinner
-        android:id="@+id/spinnerFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
-
-    <!-- Đề xuất cho bạn -->
     <TextView
         android:id="@+id/tvSuggestionsTitle"
         android:layout_width="wrap_content"
@@ -34,7 +35,7 @@
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_marginTop="16dp"
-        android:textColor="#000000"/>
+        android:textColor="@color/textColorPrimary"/>
 
     <com.google.android.flexbox.FlexboxLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -49,7 +50,6 @@
         app:justifyContent="flex_start"
         android:background="@android:color/transparent" />
 
-    <!-- Tìm kiếm gần đây -->
     <TextView
         android:id="@+id/tvRecentSearchesTitle"
         android:layout_width="wrap_content"
@@ -58,14 +58,14 @@
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_marginTop="16dp"
-        android:textColor="#000000"/>
+        android:textColor="@color/textColorPrimary"/>
 
     <TextView
         android:id="@+id/tvClearRecent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="XÓA"
-        android:textColor="@color/textPrimary"
+        android:textColor="@color/textColorPrimary"
         android:textStyle="bold"
         android:layout_gravity="end"
         android:layout_marginTop="-20dp"

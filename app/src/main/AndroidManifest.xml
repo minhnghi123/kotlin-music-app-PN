@@ -15,11 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.PNMusic"
+        android:theme="@style/Theme.MusicApp"
         tools:targetApi="23">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.PNMusic"
+            android:theme="@style/Theme.MusicApp"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,7 @@
         <activity android:name="com.example.myapp.SettingActivity" />
         <activity 
             android:name=".ui.player.PlayerActivity"
-            android:theme="@style/Theme.PNMusic" />
+            android:theme="@style/Theme.MusicApp" />
         <receiver android:name=".receiver.MusicControlReceiver" />
         <service
             android:name=".receiver.MusicService"

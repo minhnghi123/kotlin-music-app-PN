@@ -74,7 +74,7 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
             .setMediaMetadata(
                 MediaMetadata.Builder()
                     .setTitle(song.title)
-                    .setArtist(song.artist.fullName)
+                    .setArtist(song.artist.joinToString { it.fullName })
                     .setArtworkUri(Uri.parse(song.coverImage ?: ""))
                     .build()
             )

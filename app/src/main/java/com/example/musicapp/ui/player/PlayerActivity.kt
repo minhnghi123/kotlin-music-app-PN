@@ -159,7 +159,7 @@ class PlayerActivity : AppCompatActivity() {
             currentSong?.let { song ->
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "Check out this song: ${song.title} by ${song.artist.fullName}")
+                    putExtra(Intent.EXTRA_TEXT, "Check out this song: ${song.title} by ${song.artist.joinToString { it.fullName }}")
                     type = "text/plain"
                 }
                 startActivity(Intent.createChooser(shareIntent, "Share song via"))
@@ -214,7 +214,7 @@ class PlayerActivity : AppCompatActivity() {
                     currentSong?.let { song ->
                         val shareIntent = Intent().apply {
                             action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, "Check out: ${song.title} by ${song.artist.fullName}\n${song.fileUrl}")
+                            putExtra(Intent.EXTRA_TEXT, "Check out: ${song.title} by ${song.artist.joinToString { it.fullName }}\n${song.fileUrl}")
                             type = "text/plain"
                         }
                         startActivity(Intent.createChooser(shareIntent, "Share via"))
@@ -233,7 +233,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
                 R.id.action_artist -> {
                     currentSong?.let { song ->
-                        Toast.makeText(this, "Artist: ${song.artist.fullName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Artist: ${song.artist.joinToString { it.fullName }}", Toast.LENGTH_SHORT).show()
                     }
                     true
                 }
@@ -317,7 +317,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun updateUI(song: Song) {
         tvSongTitle.text = song.title
-        tvArtistName.text = song.artist.fullName
+        tvArtistName.text = song.artist.joinToString { it.fullName }
 
         Glide.with(this)
             .load(song.coverImage)

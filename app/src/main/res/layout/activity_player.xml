@@ -122,7 +122,7 @@
                             android:text="Song Title"
                             android:textSize="22sp"
                             android:textStyle="bold"
-                            android:textColor="#1E1E1E"
+                            android:textColor="?android:textColorPrimary"
                             android:maxLines="2"
                             android:ellipsize="end"/>
 
