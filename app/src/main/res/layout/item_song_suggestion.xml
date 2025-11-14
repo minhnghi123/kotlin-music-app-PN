@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:paddingVertical="8dp">
@@ -32,7 +31,7 @@
             android:textStyle="bold"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/textColorPrimary" />
+            android:textColor="?android:textColorPrimary" />
 
         <TextView
             android:id="@+id/txtArtist"
@@ -52,6 +51,5 @@
         android:layout_height="36dp"
         android:src="@drawable/ic_more"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="More"
-        app:tint="@color/textColorPrimary"/>
+        android:contentDescription="More"/>
 </LinearLayout>

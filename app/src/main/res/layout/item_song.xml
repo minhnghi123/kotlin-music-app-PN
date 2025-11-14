@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="8dp"
     android:gravity="center_vertical">
@@ -16,7 +15,7 @@
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_marginEnd="8dp"
-        android:textColor="@color/textColorPrimary" />
+        android:textColor="#000000"/>
 
     <!-- Cover -->
     <ImageView
@@ -65,16 +64,14 @@
         android:src="@drawable/ic_favorite"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_marginEnd="8dp"
-        android:padding="4dp"
-        app:tint="@color/textColorPrimary"/>
+        android:padding="4dp"/>
 
     <!-- Nút + -->
     <ImageView
         android:id="@+id/btnAdd"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_add"
-        app:tint="@color/textColorPrimary"/>
+        android:src="@drawable/ic_add" />
 
     <!-- Nút menu -->
     <ImageButton
@@ -83,6 +80,5 @@
         android:layout_height="24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_more"
-        android:layout_marginStart="8dp"
-        app:tint="@color/textColorPrimary"/>
+        android:layout_marginStart="8dp"/>
 </LinearLayout>

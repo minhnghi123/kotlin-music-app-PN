@@ -35,6 +35,7 @@ import android.util.Log
 class SearchFragment : Fragment() {
 
     private lateinit var etSearch: AutoCompleteTextView
+    private lateinit var spinnerFilter: Spinner
     private lateinit var layoutSuggestions: FlexboxLayout
     private lateinit var tvClearRecent: TextView
     private lateinit var rvRecentSearches: androidx.recyclerview.widget.RecyclerView
@@ -101,12 +102,20 @@ class SearchFragment : Fragment() {
 
         // Ánh xạ view
         etSearch = view.findViewById(R.id.etSearch)
+        spinnerFilter = view.findViewById(R.id.spinnerFilter)
         layoutSuggestions = view.findViewById(R.id.layoutSuggestions)
         tvClearRecent = view.findViewById(R.id.tvClearRecent)
         rvRecentSearches = view.findViewById(R.id.rvRecentSearches)
         btnVoiceSearch = view.findViewById(R.id.btnVoiceSearch)
 
-        // Setup RecyclerView hiển thị tìm kiếm gần đây
+        // Spinner filter
+        val filters = listOf("Tất cả", "Thể loại", "Nghệ sĩ")
+        val spinnerAdapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, filters)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerFilter.adapter = spinnerAdapter
+
+        // RecyclerView recent
         rvRecentSearches.layoutManager = LinearLayoutManager(requireContext())
         recentAdapter = RecentSearchAdapter(
             onItemClick = { song ->
@@ -125,10 +134,11 @@ class SearchFragment : Fragment() {
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, suggestions)
         etSearch.setAdapter(suggestionAdapter)
 
-        // Khi người dùng nhập từ khóa
+        // Khi người dùng nhập
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().trim()
                 if (query.isNotEmpty()) performSearch(query)
@@ -155,14 +165,14 @@ class SearchFragment : Fragment() {
         }
         songViewModel.fetchSongs()
 
-        // Lấy và hiển thị lịch sử tìm kiếm cũ
+        // Lấy lịch sử cũ và hiển thị
         loadSearchHistory()
         updateRecentSearchUI()
 
         // Gợi ý tag ban đầu
         addSuggestionTags(getSuggestionsFromHistory())
 
-        // Nút xóa lịch sử tìm kiếm
+        // Nút xóa lịch sử
         tvClearRecent.setOnClickListener {
             clearSearchHistory()
         }
@@ -182,6 +192,8 @@ class SearchFragment : Fragment() {
     // ================= Xử lý tìm kiếm =================
 
     private fun performSearch(query: String) {
+        val filter = spinnerFilter.selectedItem?.toString() ?: "Tất cả"
+
         val results = allSongs.filter { song ->
             when (filter) {
                 "Tất cả" -> song.title.contains(query, true) ||
@@ -193,12 +205,13 @@ class SearchFragment : Fragment() {
         }
 
         if (results.isNotEmpty()) {
-            addToRecentSearch(results.first())
+            val song = results.first()
+            addToRecentSearch(song)
         }
 
+        // Cập nhật gợi ý dropdown
         suggestions.clear()
         suggestions.addAll(results.map { it.title })
-
         suggestionAdapter?.notifyDataSetChanged()
     }
 
@@ -234,24 +247,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun updateSuggestions() {
-
-        // Chỉ lấy những bài hát hợp lệ từ database
-        val validSongs = allSongs.filter { song ->
-            song.title.isNotBlank() &&
-                    song.artist != null &&
-                    !song.artist.joinToString { it.fullName }.isNullOrBlank()
-        }
-
-        // Nếu không có bài hợp lệ → clear UI
-        if (validSongs.isEmpty()) {
-            addSuggestionTags(emptyList())
-            return
-        }
-
-        // Lấy ngẫu nhiên 6 bài từ database thật
-        val suggestionTitles = validSongs.shuffled().take(6).map { it.title }
-
-        addSuggestionTags(suggestionTitles)
+        val dynamicSuggestions = allSongs.shuffled().take(6).map { it.title }
+        addSuggestionTags(dynamicSuggestions)
     }
 
     // ================= Lưu và lấy lịch sử =================
@@ -274,22 +271,9 @@ class SearchFragment : Fragment() {
     private fun loadSearchHistory() {
         val prefs = requireContext().getSharedPreferences("search_history", Context.MODE_PRIVATE)
         val json = prefs.getString("recent_searches_json", null)
-
         if (json != null) {
-            try {
-                val type = object : TypeToken<MutableList<Song>>() {}.type
-                recentSearches = gson.fromJson(json, type)
-
-            } catch (e: Exception) {
-                // MIGRATE dữ liệu cũ (artist = object) -> (artist = List<Artist>)
-                try {
-                    val type = object : TypeToken<MutableList<Song>>() {}.type
-                    recentSearches = gson.fromJson(json, type)
-                } catch (ex: Exception) {
-                    // Nếu migrate fail → clear
-                    recentSearches.clear()
-                }
-            }
+            val type = object : TypeToken<MutableList<Song>>() {}.type
+            recentSearches = gson.fromJson(json, type)
         }
     }
 

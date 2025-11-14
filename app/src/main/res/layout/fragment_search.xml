@@ -38,6 +38,13 @@
             android:scaleY="1.1"/>
     </LinearLayout>
 
+    <Spinner
+        android:id="@+id/spinnerFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Đề xuất cho bạn -->
     <TextView
         android:id="@+id/tvSuggestionsTitle"
         android:layout_width="wrap_content"
@@ -45,8 +52,7 @@
         android:text="Đề xuất cho bạn"
         android:textStyle="bold"
         android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/textColorPrimary"/>
+        android:layout_marginTop="16dp"/>
 
     <com.google.android.flexbox.FlexboxLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -61,6 +67,7 @@
         app:justifyContent="flex_start"
         android:background="@android:color/transparent" />
 
+    <!-- Tìm kiếm gần đây -->
     <TextView
         android:id="@+id/tvRecentSearchesTitle"
         android:layout_width="wrap_content"
@@ -68,8 +75,7 @@
         android:text="Tìm kiếm gần đây"
         android:textStyle="bold"
         android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/textColorPrimary"/>
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/tvClearRecent"

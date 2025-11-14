@@ -8,50 +8,59 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <!-- Header -->
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/headerLayout"
             android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:orientation="horizontal"
+            android:layout_height="105dp"
+            android:background="@android:color/white"
             android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:gravity="center_vertical">
+            android:paddingEnd="12dp">
 
             <!-- Avatar -->
             <ImageView
                 android:id="@+id/imgAvatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/ic_user" />
+                android:layout_marginTop="48dp"
+                android:src="@drawable/ic_user"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <TextView
-                android:id="@+id/trangChu"
+            <!-- Button login -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trang chủ"
-                android:layout_marginTop="20dp"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:textColor="@color/textColorPrimary"/>
+                android:text="Đăng nhập"
+                android:layout_marginTop="48dp"
+                android:background="@drawable/btn_gradient"
+                android:backgroundTint="@null"
+                android:textColor="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <!-- Thông tin người dùng -->
+            <!-- Welcome + Username -->
             <LinearLayout
                 android:id="@+id/userInfoLayout"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
+                app:layout_constraintStart_toEndOf="@id/imgAvatar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="10dp">
 
                 <TextView
                     android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
                     android:text="Welcome back!"
                     android:textColor="@color/textColorPrimary"
                     android:textSize="16sp" />
@@ -65,32 +74,29 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- Dùng Space để đẩy icon về bên phải -->
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
             <!-- Notification -->
             <ImageView
                 android:id="@+id/iconBell"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="22dp"
                 android:src="@drawable/ic_notifications"
-                app:tint="@color/textColorPrimary"/>
+                app:layout_constraintEnd_toStartOf="@id/iconSetting"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="48dp"
+                android:layout_marginEnd="16dp"/>
 
             <!-- Settings -->
             <ImageView
                 android:id="@+id/iconSetting"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="48dp"
                 android:src="@drawable/ic_settings"
-                app:tint="@color/textColorPrimary"/>
-
-        </LinearLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include layout="@layout/section_hot_singers"/>
 
@@ -107,7 +113,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:padding="4dp"
-                android:textColor="?android:textColorPrimary" />
+                android:textColor="@android:color/black"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPlaylists"
@@ -140,7 +146,7 @@
                     android:text="Gợi ý bài hát"
                     android:textStyle="bold"
                     android:textSize="18sp"
-                    android:textColor="?android:textColorPrimary" />
+                    android:textColor="@android:color/black"/>
 
                 <ImageButton
                     android:id="@+id/btnPlayAll"
@@ -148,8 +154,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_play"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Phát tất cả"
-                    app:tint="@color/textColorPrimary"/>
+                    android:contentDescription="Phát tất cả"/>
             </LinearLayout>
 
             <!-- RecyclerView -->
