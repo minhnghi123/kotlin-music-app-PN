@@ -11,7 +11,8 @@
 
     <color name="red">#F44336</color>
     <color name="gray">#757575</color>
-    
+    <color name="search_box_background">#F0F0F0</color>
+    <color name="tag_background_color">#E0E0E0</color>
     <!-- 👇 Thêm nếu chưa có -->
     <color name="background">#FFFFFF</color>
 </resources>
