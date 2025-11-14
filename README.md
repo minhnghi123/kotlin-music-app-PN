@@ -54,6 +54,9 @@ Search
 - Description: Search bar at the top, recent queries, intelligent suggestions, and grouped results (Songs, Albums, Artists). Quick actions include play, add to queue, or add to playlist.
 - Screenshot:
   <img src="https://github.com/user-attachments/assets/5ecaf11b-3b00-4110-9ea4-bd0ff383ad5e" alt="Search layout" style="max-width:300px; width:100%; height:auto; border-radius:8px; object-fit:cover; box-shadow:0 6px 18px rgba(0,0,0,0.10);" />
+- Search using speech recognization by utilizing Google Services.
+ <img src="https://github.com/user-attachments/assets/feb3a292-4d91-4360-aee1-ef547e203c92" alt="Search Speech Recognization" style="max-width:300px; width:100%; height:auto; border-radius:8px; object-fit:cover; box-shadow:0 6px 18px rgba(0,0,0,0.10);" />
+
 
 Library
 - Description: The user's library — playlists, downloaded songs, albums, and artists with quick filters and sorting options.
