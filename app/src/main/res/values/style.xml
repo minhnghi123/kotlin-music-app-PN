@@ -31,4 +31,9 @@
         <item name="android:layout_marginEnd">8dp</item>
     </style>
 
+    <style name="CustomSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressDrawable">@drawable/seekbar_progress</item>
+        <item name="android:thumb">@drawable/seekbar_thumb</item>
+    </style>
+
 </resources>

@@ -63,9 +63,9 @@ class SongAdapter(
             // Rank
             holder.tvRank.text = (position + 1).toString()
 
-            // Title + Artist
+            // Title + Artist (lấy artist đầu tiên hoặc "Unknown")
             holder.txtTitle.text = song.title
-            holder.txtArtist.text = song.artist.joinToString { it.fullName }
+            holder.txtArtist.text = song.artist.firstOrNull()?.fullName ?: "Unknown Artist"
 
             // Load cover
             Glide.with(holder.itemView)

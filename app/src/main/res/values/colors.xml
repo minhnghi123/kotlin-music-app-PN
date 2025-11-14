@@ -1,18 +1,16 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF5500</color>
-    <color name="colorPrimaryVariant">#E64A00</color>
+    <color name="colorPrimary">#1E1E1E</color>
+    <color name="colorPrimaryVariant">#000000</color>
     <color name="colorOnPrimary">#FFFFFF</color>
 
     <color name="backgroundColor">#FFFFFF</color>
-    <color name="textColorPrimary">#000000</color>
+    <color name="textColorPrimary">#1E1E1E</color>
     <color name="textColorSecondary">#757575</color>
-    <color name="cardColor">#F5F5F5</color>
+    <color name="cardColor">#FAFAFA</color>
 
     <color name="red">#F44336</color>
     <color name="gray">#757575</color>
-    <color name="tag_background_color">#E0E0E0</color>
-    <color name="tag_text_color">@color/textColorPrimary</color>
-    <color name="search_box_background">#EFEFEF</color>
-    <color name="icon_tint_color">#555555</color>
 </resources>
+

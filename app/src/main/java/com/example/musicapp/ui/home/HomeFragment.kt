@@ -1,3 +1,4 @@
+
 package com.example.musicapp.ui.home
 
 import android.content.Intent
@@ -30,6 +31,7 @@ import com.example.musicapp.models.songs.SongListResponse
 import com.example.musicapp.models.users.UserResponse
 import com.example.musicapp.network.ApiClient
 import com.example.musicapp.data.FavoriteSongsRepository
+import com.example.musicapp.ui.auth.LoginActivity
 import com.example.musicapp.ui.artist.ArtistAdapter
 import com.example.musicapp.ui.artist.ArtistDetailFragment
 import com.example.musicapp.ui.playlists.PlaylistAdapter
@@ -54,7 +56,7 @@ class HomeFragment : Fragment() {
 
     // Header UI
     private var headerLayout: View? = null
-    private var trangChu: TextView? = null
+    private var btnLogin: Button? = null
     private var imgAvatar: ImageView? = null
     private var tvWelcome: TextView? = null
     private var tvUserName: TextView? = null
@@ -91,6 +93,14 @@ class HomeFragment : Fragment() {
 
         viewModel = ViewModelProvider(this)[SongViewModel::class.java]
         viewModel.songs.observe(viewLifecycleOwner) { list ->
+            android.util.Log.d("HomeFragment", "=== Loaded ${list.size} songs ===")
+            list.take(3).forEach { song ->
+                android.util.Log.d("HomeFragment", "Song: ${song.title}")
+                android.util.Log.d("HomeFragment", "  Artists: ${song.artist.size} items")
+                song.artist.forEach { artist ->
+                    android.util.Log.d("HomeFragment", "    - ${artist.fullName}")
+                }
+            }
             adapter.submit(list)
         }
         viewModel.error.observe(viewLifecycleOwner) { err ->
@@ -129,26 +139,42 @@ class HomeFragment : Fragment() {
                 call: Call<SongListResponse>,
                 response: Response<SongListResponse>
             ) {
+                android.util.Log.d("HomeFragment", "=== Suggestions API Response ===")
+                android.util.Log.d("HomeFragment", "Response code: ${response.code()}")
+                android.util.Log.d("HomeFragment", "Response body: ${response.body()}")
+                
                 if (response.isSuccessful && response.body()?.data != null) {
                     val songs = response.body()!!.data
+                    android.util.Log.d("HomeFragment", "Loaded ${songs.size} suggested songs")
+                    
+                    // Log artist của 2 bài đầu
+                    songs.take(2).forEach { song ->  // 👈 Sửa từ "=>" thành "->"
+                        android.util.Log.d("HomeFragment", "Song: ${song.title}")
+                        android.util.Log.d("HomeFragment", "  Artists: ${song.artist.size} items")
+                        song.artist.forEach { artist ->
+                            android.util.Log.d("HomeFragment", "    - ${artist.fullName}")
+                        }
+                    }
+                    
                     suggestionAdapter.submit(songs)
                 } else {
-                    Toast.makeText(requireContext(), "Không có dữ liệu gợi ý", Toast.LENGTH_SHORT)
-                        .show()
+                    android.util.Log.e("HomeFragment", "No suggestion data or failed")
+                    Toast.makeText(requireContext(), "Không có dữ liệu gợi ý", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<SongListResponse>, t: Throwable) {
+                android.util.Log.e("HomeFragment", "API lỗi: ${t.message}", t)
+                t.printStackTrace()
                 if (isAdded) {
-                    Toast.makeText(requireContext(), "API lỗi: ${t.message}", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(requireContext(), "API lỗi: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         })
 
         // Header mapping
         headerLayout = view.findViewById(R.id.headerLayout)
-        trangChu = view.findViewById(R.id.trangChu)
+        btnLogin = view.findViewById(R.id.btnLogin)
         imgAvatar = view.findViewById(R.id.imgAvatar)
         tvWelcome = view.findViewById(R.id.tvWelcome)
         tvUserName = view.findViewById(R.id.tvUserName)
@@ -224,7 +250,7 @@ class HomeFragment : Fragment() {
             val cachedAvatar = PreferenceHelper.getAvatar(requireContext())
 
             headerLayout?.visibility = View.VISIBLE
-            trangChu?.visibility = View.GONE
+            btnLogin?.visibility = View.GONE
             imgAvatar?.visibility = View.VISIBLE
             userInfoLayout?.visibility = View.VISIBLE
 
@@ -245,9 +271,14 @@ class HomeFragment : Fragment() {
 
         } else {
             headerLayout?.visibility = View.VISIBLE
-            trangChu?.visibility = View.VISIBLE
+            btnLogin?.visibility = View.VISIBLE
             imgAvatar?.visibility = View.GONE
             userInfoLayout?.visibility = View.GONE
+
+            btnLogin?.setOnClickListener {
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -450,3 +481,4 @@ class HomeFragment : Fragment() {
     }
 
 }
+

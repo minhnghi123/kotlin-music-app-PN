@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
+import com.example.musicapp.models.songs.Song
 
 class MiniPlayerFragment : Fragment() {
 
@@ -38,13 +39,7 @@ class MiniPlayerFragment : Fragment() {
         playerVM.currentSong.observe(viewLifecycleOwner) { song ->
             view.isVisible = song != null
             if (song != null) {
-                txtTitle.text = song.title
-                txtArtist.text = song.artist.joinToString { it.fullName }
-                Glide.with(this)
-                    .load(song.coverImage)
-                    .placeholder(R.mipmap.ic_launcher)
-                    .error(R.drawable.img_error)
-                    .into(imgCover)
+                updateUI(song)
             }
         }
 
@@ -75,5 +70,15 @@ class MiniPlayerFragment : Fragment() {
         view.findViewById<ImageButton>(R.id.btnMiniLike)?.setOnClickListener {
             // TODO: Add to favorites
         }
+    }
+
+    private fun updateUI(song: Song) {
+        txtTitle.text = song.title
+        txtArtist.text = song.artist.firstOrNull()?.fullName ?: "Unknown Artist"
+        Glide.with(this)
+            .load(song.coverImage)
+            .placeholder(R.mipmap.ic_launcher)
+            .error(R.drawable.img_error)
+            .into(imgCover)
     }
 }

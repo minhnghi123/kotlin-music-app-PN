@@ -59,9 +59,13 @@ class FavoriteSongAdapter(
             // Số thứ tự
             holder.tvRank.text = (position + 1).toString()
 
-            // Title + Artist
+            // Title + Artist (hiển thị tất cả artists hoặc chỉ artist đầu tiên)
             holder.txtTitle.text = song.title
-            holder.txtArtist.text = song.artist.joinToString { it.fullName }
+            // Cách 1: Hiển thị TẤT CẢ artists ngăn cách bằng dấu phẩy
+            holder.txtArtist.text = song.artist.joinToString(", ") { it.fullName }
+            
+            // Cách 2: Chỉ hiển thị artist đầu tiên (nếu muốn đơn giản hơn)
+            // holder.txtArtist.text = song.artist.firstOrNull()?.fullName ?: "Unknown Artist"
 
             // Load ảnh cover
             Glide.with(holder.itemView)
