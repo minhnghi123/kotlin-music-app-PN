@@ -11,7 +11,7 @@ data class SongForArtist(
     val title: String,
 
     @SerializedName("artist")
-    val artist: List<Artist> = emptyList(), // 👈 Phải là List<Artist>
+    val artist: List<Artist> = emptyList(),
 
     @SerializedName("album")
     val album: String?,

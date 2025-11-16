@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/colorOnPrimary">
+
+    <!-- Ảnh chủ đề -->
+    <ImageView
+        android:id="@+id/ivTopicCover"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true" />
+
+    <!-- Tên chủ đề -->
+    <TextView
+        android:id="@+id/tvTopicName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Topic Name"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp" />
+
+    <!-- Danh sách bài hát theo chủ đề -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSongs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="ifContentScrolls"
+        android:paddingTop="8dp" />
+
+    <!-- Nút xem thêm / thu gọn -->
+    <TextView
+        android:id="@+id/btnShowMoreSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Xem thêm"
+        android:textColor="@color/colorPrimaryVariant"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:padding="12dp"
+        android:visibility="gone" />
+
+</LinearLayout>

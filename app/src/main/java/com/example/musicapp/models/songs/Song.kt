@@ -11,7 +11,7 @@ data class Song(
     val title: String,
 
     @SerializedName("artist")
-    val artist: List<Artist> = emptyList(), // Thêm default value
+    val artist: List<Artist> = emptyList(),
 
     @SerializedName("album")
     val album: String = "",
