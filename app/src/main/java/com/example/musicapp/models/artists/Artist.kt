@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class Artist(
     @SerializedName(value = "_id", alternate = ["id"]) // 👈 Chấp nhận cả "_id" và "id"
     val _id: String = "",
-    
-    @SerializedName("fullName")
+
+    @SerializedName(value = "fullName", alternate = ["name"])
     val fullName: String = "Unknown Artist",
     
     @SerializedName("country")

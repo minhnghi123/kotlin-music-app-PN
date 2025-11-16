@@ -6,26 +6,21 @@ import com.google.gson.*
 import java.lang.reflect.Type
 
 class SongForArtistDeserializer : JsonDeserializer<SongForArtist> {
+
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
     ): SongForArtist {
-        if (json == null || !json.isJsonObject) {
+
+        if (json == null || !json.isJsonObject)
             throw JsonParseException("Invalid SongForArtist JSON")
-        }
 
         val obj = json.asJsonObject
-        
-        // Parse artist field
-        val artistList = parseArtists(obj.get("artist"), context)
-        
-        Log.d("SongForArtistDeserializer", "Parsed song: ${obj.get("title")?.asString}")
-        Log.d("SongForArtistDeserializer", "  Artists: ${artistList.size}")
-        artistList.forEach { 
-            Log.d("SongForArtistDeserializer", "    - ${it.fullName}")
-        }
-        
+
+        // Parse artist từ JSON - luôn trả về List<Artist>
+        val artistList = parseArtists(obj.get("artist"))
+
         return SongForArtist(
             _id = obj.get("_id")?.asString ?: "",
             title = obj.get("title")?.asString ?: "",
@@ -43,82 +38,67 @@ class SongForArtistDeserializer : JsonDeserializer<SongForArtist> {
             updatedAt = obj.get("updatedAt")?.asString
         )
     }
-    
-    private fun parseArtists(
-        element: JsonElement?,
-        context: JsonDeserializationContext?
-    ): List<Artist> {
-        if (element == null || element.isJsonNull) {
-            return emptyList()
-        }
-        
+
+
+    private fun parseArtists(element: JsonElement?): List<Artist> {
+        if (element == null || element.isJsonNull) return emptyList()
+
         return try {
             when {
+                // Case 1: Array
                 element.isJsonArray -> {
-                    val list = mutableListOf<Artist>()
-                    element.asJsonArray.forEach { item ->
-                        parseSingleArtist(item)?.let { list.add(it) }
-                    }
-                    list
+                    element.asJsonArray.mapNotNull { parseSingleArtist(it) }
                 }
+
+                // Case 2: Object
                 element.isJsonObject -> {
-                    val artist = parseSingleArtist(element)
-                    if (artist != null) listOf(artist) else emptyList()
+                    parseSingleArtist(element)?.let { listOf(it) } ?: emptyList()
                 }
+
+                // Case 3: String (ex: "A123")
                 element.isJsonPrimitive && element.asJsonPrimitive.isString -> {
-                    listOf(Artist(
-                        _id = element.asString,
-                        fullName = "Unknown Artist",
-                        country = "",
-                        coverImage = null
-                    ))
+                    listOf(
+                        Artist(
+                            _id = element.asString,
+                            fullName = "Unknown Artist",
+                            country = "",
+                            coverImage = null
+                        )
+                    )
                 }
+
                 else -> emptyList()
             }
         } catch (e: Exception) {
-            Log.e("SongForArtistDeserializer", "Error parsing artists: ${e.message}", e)
+            Log.e("SongArtist", "Error parsing artists: ${e.message}", e)
             emptyList()
         }
     }
-    
-    private fun parseSingleArtist(element: JsonElement?): Artist? {
-        if (element == null || !element.isJsonObject) return null
-        
-        return try {
-            val obj = element.asJsonObject
-            
-            // Check nested artist object
-            val nestedArtist = obj.get("artist")
-            if (nestedArtist != null && nestedArtist.isJsonObject) {
-                return parseSingleArtist(nestedArtist)
-            }
-            
-            Artist(
-                _id = obj.get("_id")?.asString 
-                    ?: obj.get("id")?.asString 
-                    ?: "",
-                fullName = obj.get("fullName")?.asString 
-                    ?: obj.get("name")?.asString 
-                    ?: "Unknown Artist",
-                country = obj.get("country")?.asString ?: "",
-                coverImage = obj.get("coverImage")?.asString
-            )
-        } catch (e: Exception) {
-            Log.e("SongForArtistDeserializer", "Error parsing single artist", e)
-            null
-        }
+
+    private fun parseSingleArtist(el: JsonElement?): Artist? {
+        if (el == null || !el.isJsonObject) return null
+
+        val obj = el.asJsonObject
+
+        return Artist(
+            _id = obj["_id"]?.asString
+                ?: obj["id"]?.asString
+                ?: "",
+
+            fullName = obj["fullName"]?.asString
+                ?: obj["name"]?.asString
+                ?: "Unknown Artist",
+
+            country = obj["country"]?.asString ?: "",
+            coverImage = obj["coverImage"]?.asString
+        )
     }
-    
-    private fun parseStringList(element: JsonElement?): List<String> {
-        if (element == null || element.isJsonNull) return emptyList()
-        if (!element.isJsonArray) return emptyList()
-        
-        return try {
-            element.asJsonArray.mapNotNull { 
-                if (it.isJsonPrimitive) it.asString else null 
-            }
-        } catch (e: Exception) {
-            emptyList()
+
+    private fun parseStringList(el: JsonElement?): List<String> {
+        if (el == null || !el.isJsonArray) return emptyList()
+
+        return el.asJsonArray.mapNotNull {
+            if (it.isJsonPrimitive) it.asString else null
         }
     }
 }

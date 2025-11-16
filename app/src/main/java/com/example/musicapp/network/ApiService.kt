@@ -34,6 +34,7 @@ import retrofit2.http.Path
 import com.example.musicapp.models.AddCommentRequest
 import com.example.musicapp.models.AddCommentResponse
 import com.example.musicapp.models.CommentResponse
+import com.example.musicapp.models.topic.TopicResponse
 
 interface ApiService {
 //  Phan cho authentication
@@ -120,4 +121,6 @@ interface ApiService {
     suspend fun likeComment(@Path("commentId") commentId: String): Response<AddCommentResponse>
 
     // Phan cho Topics
+    @GET("music/topics")
+    fun getTopics(): Call<TopicResponse>
 }

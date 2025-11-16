@@ -106,29 +106,29 @@ class ArtistDetailFragment : Fragment() {
 
     private fun loadArtistSongs(artistId: String) {
         android.util.Log.d("ArtistDetailFragment", "=== Loading artist: $artistId ===")
-        
+
         ApiClient.api.getArtistDetail(artistId).enqueue(object : Callback<ArtistDetailResponse> {
             override fun onResponse(
                 call: Call<ArtistDetailResponse>,
                 response: Response<ArtistDetailResponse>
             ) {
                 if (!isAdded) return
-                
+
                 android.util.Log.d("ArtistDetailFragment", "Response code: ${response.code()}")
-                
+
                 if (response.isSuccessful && response.body() != null) {
                     val body = response.body()!!
-                    
+
                     android.util.Log.d("ArtistDetailFragment", "Artist: ${body.artist.fullName}")
                     android.util.Log.d("ArtistDetailFragment", "Country: ${body.artist.country}")
                     android.util.Log.d("ArtistDetailFragment", "Cover: ${body.artist.coverImage}")
                     android.util.Log.d("ArtistDetailFragment", "Songs: ${body.songs.size}")
-                    
+
                     // Update UI
                     tvArtistName.text = body.artist.fullName
                     tvArtistRealName.text = "Tên thật: ${body.artist.fullName}"
                     tvArtistCountry.text = "Quốc gia: ${body.artist.country}"
-                    
+
                     // Load artist cover
                     Glide.with(requireContext())
                         .load(body.artist.coverImage)
@@ -144,11 +144,11 @@ class ArtistDetailFragment : Fragment() {
                         s.artist.forEach {
                             android.util.Log.d("ArtistDetailFragment", "      - ${it.fullName}")
                         }
-                        
+
                         com.example.musicapp.models.songs.Song(
                             _id = s._id,
                             title = s.title,
-                            artist = s.artist, // SongForArtistDeserializer đã parse đúng
+                            artist = s.artist ?: emptyList(),
                             album = s.album ?: "",
                             topic = s.topic ?: emptyList(),
                             fileUrl = s.fileUrl ?: "",
