@@ -20,18 +20,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
 import com.example.musicapp.ai.MusicQueryProcessor
 import com.example.musicapp.ai.VoiceSearchManager
+import com.example.musicapp.data.FavoriteSongsRepository
 import com.example.musicapp.models.artists.Artist
+import com.example.musicapp.models.playlists.AddToPlaylistRequest
+import com.example.musicapp.models.playlists.CreatePlaylistRequest
 import com.example.musicapp.models.songs.Song
 import com.example.musicapp.ui.home.SongViewModel
 import com.example.musicapp.network.ApiClient
+import com.example.musicapp.ui.playlists.PlaylistAdapter
 import com.google.android.flexbox.FlexboxLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -83,6 +89,9 @@ class SearchFragment : Fragment() {
     private lateinit var rvTopics: RecyclerView
     private lateinit var topicAdapter: com.example.musicapp.ui.topic.TopicAdapter
     private var topicList: List<com.example.musicapp.models.topic.Topic> = emptyList()
+
+    private lateinit var favoriteRepository: FavoriteSongsRepository
+    private var favoriteSongIds: Set<String> = emptySet()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -290,6 +299,8 @@ class SearchFragment : Fragment() {
 
         // Initially hide artist results area
         rvArtistResults.visibility = View.GONE
+
+        favoriteRepository = FavoriteSongsRepository()
 
         return view
     }
@@ -667,6 +678,144 @@ class SearchFragment : Fragment() {
         layoutSuggestions.visibility = View.VISIBLE
         rvRecentSearches.visibility = View.VISIBLE
         tvClearRecent.visibility = View.VISIBLE
+    }
+
+    private fun setupRecyclerView() {
+        // Update adapter với full callbacks
+        val searchAdapter = SearchAdapter(
+            items = emptyList(),
+            onClick = { song ->
+                (activity as? com.example.musicapp.MainActivity)?.showMiniPlayer(song)
+            },
+            onAddToPlaylist = { song ->
+                showPlaylistDialog(song)
+            },
+            onToggleFavorite = { song ->
+                toggleFavorite(song)
+            },
+            favoriteSongIds = favoriteSongIds
+        )
+        // Gán adapter cho RecyclerView nào đó (tuỳ logic của bạn)
+    }
+
+    private fun loadFavoriteSongs() {
+        favoriteRepository.getFavoriteSongs { _, _, ids ->
+            favoriteSongIds = ids ?: emptySet()
+            // Update adapter nếu có
+            // searchAdapter.updateFavoriteIds(favoriteSongIds)
+        }
+    }
+
+    private fun toggleFavorite(song: Song) {
+        if (favoriteSongIds.contains(song._id)) {
+            favoriteRepository.removeFavoriteSong(song._id) { success, _ ->
+                if (success == true) {
+                    loadFavoriteSongs()
+                    Toast.makeText(requireContext(), "Removed from favorites", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            favoriteRepository.addFavoriteSong(song._id) { success, _ ->
+                if (success == true) {
+                    loadFavoriteSongs()
+                    Toast.makeText(requireContext(), "Added to favorites", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showPlaylistDialog(song: Song) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_playlists, null)
+        val rvPlaylists = dialogView.findViewById<RecyclerView>(R.id.rvPlaylists)
+        val btnCreatePlaylist = dialogView.findViewById<Button>(R.id.btnCreatePlaylist)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Chọn playlist")
+            .setView(dialogView)
+            .setNegativeButton("Đóng", null)
+            .create()
+
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.api.getMyPlaylists()
+                val playlists = response.data
+
+                val playlistAdapter = PlaylistAdapter(playlists)
+                rvPlaylists.layoutManager = LinearLayoutManager(requireContext())
+                rvPlaylists.adapter = playlistAdapter
+
+                playlistAdapter.setOnItemClickListener { playlist ->
+                    lifecycleScope.launch {
+                        try {
+                            val body = AddToPlaylistRequest(playlist._id, song._id)
+                            val addResponse = ApiClient.api.addToPlaylist(body)
+                            if (addResponse.isSuccessful && addResponse.body()?.success == true) {
+                                Toast.makeText(requireContext(), "Đã thêm vào ${playlist.title}", Toast.LENGTH_SHORT).show()
+                                dialog.dismiss()
+                            } else {
+                                Toast.makeText(requireContext(), addResponse.body()?.message ?: "Thêm thất bại", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        btnCreatePlaylist.setOnClickListener {
+            showCreatePlaylistDialog(song) {
+                lifecycleScope.launch {
+                    try {
+                        val response = ApiClient.api.getMyPlaylists()
+                        (rvPlaylists.adapter as? PlaylistAdapter)?.apply {
+                            val newAdapter = PlaylistAdapter(response.data)
+                            rvPlaylists.adapter = newAdapter
+                        }
+                    } catch (_: Exception) {}
+                }
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showCreatePlaylistDialog(song: Song, onCreated: () -> Unit) {
+        val inputView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_create_playlist, null)
+        val etTitle = inputView.findViewById<EditText>(R.id.etTitle)
+        val etDescription = inputView.findViewById<EditText>(R.id.etDescription)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Tạo Playlist mới")
+            .setView(inputView)
+            .setPositiveButton("Tạo") { _, _ ->
+                val title = etTitle.text.toString().trim()
+                val desc = etDescription.text.toString().trim()
+
+                if (title.isNotEmpty()) {
+                    lifecycleScope.launch {
+                        try {
+                            val body = CreatePlaylistRequest(title, desc, listOf(song._id), song.coverImage)
+                            val response = ApiClient.api.createPlaylist(body)
+                            if (response.code == "success") {
+                                Toast.makeText(requireContext(), "Tạo playlist thành công!", Toast.LENGTH_SHORT).show()
+                                onCreated()
+                            } else {
+                                Toast.makeText(requireContext(), "Không thể tạo playlist", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Tên playlist không được trống", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Hủy", null)
+            .show()
     }
 
 }

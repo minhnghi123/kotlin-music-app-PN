@@ -5,17 +5,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
+import com.example.musicapp.data.FavoriteSongsRepository
 import com.example.musicapp.models.songs.ApiListResponse
 import com.example.musicapp.models.songs.Song
 import com.example.musicapp.network.ApiClient
-import com.example.musicapp.ui.home.SongAdapter
+import com.example.musicapp.ui.common.UniversalSongAdapter
+import com.example.musicapp.ui.player.PlayerViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,16 +35,25 @@ class TopicSongsFragment : Fragment() {
     private lateinit var tvTopicName: TextView
     private lateinit var ivTopicCover: ImageView
     private lateinit var btnShowMoreSong: TextView
+    private lateinit var btnBack: ImageButton
 
     private var fullSongList: List<Song> = emptyList()
-    private lateinit var songAdapter: SongAdapter
+    private lateinit var songAdapter: UniversalSongAdapter
     private var isExpanded = false
+    
+    private val playerVM: PlayerViewModel by activityViewModels()
+    private lateinit var favoriteRepository: FavoriteSongsRepository
+    private var favoriteSongIds: Set<String> = emptySet()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         topicId = arguments?.getString("topicId") ?: ""
         topicName = arguments?.getString("topicName") ?: ""
         topicImage = arguments?.getString("topicImage")
+        
+        Log.d("TopicSongsFragment", "=== Fragment Created ===")
+        Log.d("TopicSongsFragment", "Topic ID: $topicId")
+        Log.d("TopicSongsFragment", "Topic Name: $topicName")
     }
 
     override fun onCreateView(
@@ -56,30 +70,71 @@ class TopicSongsFragment : Fragment() {
         ivTopicCover = view.findViewById(R.id.ivTopicCover)
         rvSongs = view.findViewById(R.id.rvSongs)
         btnShowMoreSong = view.findViewById(R.id.btnShowMoreSong)
+        btnBack = view.findViewById(R.id.btnBack)
+
+        favoriteRepository = FavoriteSongsRepository()
 
         tvTopicName.text = topicName
 
-        // Load ảnh topic nếu có
+        // Load ảnh topic
         Glide.with(requireContext())
             .load(topicImage)
             .placeholder(R.drawable.ic_default_album_art)
             .centerCrop()
             .into(ivTopicCover)
 
-        // Setup RecyclerView
+        // Setup RecyclerView với UniversalSongAdapter
         rvSongs.layoutManager = LinearLayoutManager(requireContext())
-        songAdapter = SongAdapter(emptyList()) { song ->
-            (activity as? com.example.musicapp.MainActivity)?.showMiniPlayer(song)
-        }
+        songAdapter = UniversalSongAdapter(
+            items = emptyList(),
+            onClick = { song ->
+                com.example.musicapp.ui.player.PlayerHolder.currentSong = song
+                playerVM.play(song)
+            },
+            onAddToPlaylist = { song ->
+                Toast.makeText(requireContext(), "Add to playlist", Toast.LENGTH_SHORT).show()
+            },
+            onToggleFavorite = { song ->
+                toggleFavorite(song)
+            },
+            favoriteSongIds = favoriteSongIds
+        )
         rvSongs.adapter = songAdapter
 
         btnShowMoreSong.setOnClickListener { toggleSongs() }
+        btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
 
-        // Fetch songs
+        // Load favorites + songs
+        loadFavoriteSongs()
         fetchSongsForTopic()
     }
 
+    private fun loadFavoriteSongs() {
+        favoriteRepository.getFavoriteSongs { _, _, ids ->
+            favoriteSongIds = ids ?: emptySet()
+            songAdapter.updateFavoriteIds(favoriteSongIds)
+        }
+    }
+
+    private fun toggleFavorite(song: Song) {
+        if (favoriteSongIds.contains(song._id)) {
+            favoriteRepository.removeFavoriteSong(song._id) { success, _ ->
+                if (success == true) {
+                    loadFavoriteSongs()
+                }
+            }
+        } else {
+            favoriteRepository.addFavoriteSong(song._id) { success, _ ->
+                if (success == true) {
+                    loadFavoriteSongs()
+                }
+            }
+        }
+    }
+
     private fun fetchSongsForTopic() {
+        Log.d("TopicSongsFragment", "=== Fetching songs for topic: $topicId ===")
+        
         ApiClient.api.getSongs().enqueue(object : Callback<ApiListResponse<Song>> {
             override fun onResponse(
                 call: Call<ApiListResponse<Song>>,
@@ -87,23 +142,36 @@ class TopicSongsFragment : Fragment() {
             ) {
                 if (!isAdded) return
 
-                val allSongs = response.body()?.data ?: emptyList()
+                if (response.isSuccessful) {
+                    val allSongs = response.body()?.data ?: emptyList()
+                    Log.d("TopicSongsFragment", "Total songs from API: ${allSongs.size}")
 
-                Log.d("TopicSongs", "=== Topic ID: $topicId ===")
+                    // Filter theo topicId
+                    fullSongList = allSongs.filter { song ->
+                        val hasTopicId = song.topic.contains(topicId)
+                        if (hasTopicId) {
+                            Log.d("TopicSongsFragment", "✅ Matched: ${song.title}")
+                        }
+                        hasTopicId
+                    }
 
-                // Filter theo topicId
-                fullSongList = allSongs.filter { song ->
-                    song.topic.contains(topicId)
+                    Log.d("TopicSongsFragment", "Filtered songs: ${fullSongList.size}")
+
+                    if (fullSongList.isEmpty()) {
+                        Toast.makeText(requireContext(), "No songs in this topic", Toast.LENGTH_SHORT).show()
+                    }
+
+                    showLimitedSongs()
+                } else {
+                    Log.e("TopicSongsFragment", "API Error: ${response.code()}")
+                    Toast.makeText(requireContext(), "Error loading songs", Toast.LENGTH_SHORT).show()
                 }
-
-                Log.d("TopicSongs", "Found ${fullSongList.size} songs for this topic.")
-
-                // Hiển thị
-                showLimitedSongs()
             }
 
             override fun onFailure(call: Call<ApiListResponse<Song>>, t: Throwable) {
-                Log.e("TopicSongs", "API error: ${t.message}")
+                if (!isAdded) return
+                Log.e("TopicSongsFragment", "API Failure: ${t.message}", t)
+                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -111,7 +179,7 @@ class TopicSongsFragment : Fragment() {
     private fun showLimitedSongs() {
         val limited = if (fullSongList.size > 5) fullSongList.take(5) else fullSongList
 
-        songAdapter.submit(limited)
+        songAdapter.updateData(limited)
         btnShowMoreSong.visibility = if (fullSongList.size > 5) View.VISIBLE else View.GONE
         btnShowMoreSong.text = "Xem thêm"
         isExpanded = false
@@ -121,7 +189,7 @@ class TopicSongsFragment : Fragment() {
         if (isExpanded) {
             showLimitedSongs()
         } else {
-            songAdapter.submit(fullSongList)
+            songAdapter.updateData(fullSongList)
             btnShowMoreSong.text = "Thu gọn"
             isExpanded = true
         }

@@ -3,6 +3,7 @@ package com.example.musicapp.ui.search
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -17,27 +18,31 @@ class RecentSearchAdapter(
 ) : RecyclerView.Adapter<RecentSearchAdapter.RecentSearchViewHolder>() {
 
     inner class RecentSearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvRank: TextView = itemView.findViewById(R.id.tvRank)
         val imgCover: ImageView = itemView.findViewById(R.id.imgCover)
-        val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
-        val tvArtist: TextView = itemView.findViewById(R.id.tvArtist)
-        val btnMore: ImageView = itemView.findViewById(R.id.btnMore)
+        val txtTitle: TextView = itemView.findViewById(R.id.txtTitle)
+        val txtArtist: TextView = itemView.findViewById(R.id.txtArtist)
+        val btnMore: ImageButton = itemView.findViewById(R.id.btnMore)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentSearchViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_recent_search, parent, false)
+            .inflate(R.layout.item_song, parent, false) // 👈 Dùng item_song thay vì item_recent_search
         return RecentSearchViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecentSearchViewHolder, position: Int) {
         val song = recentSongs[position]
-        holder.tvTitle.text = song.title
-        holder.tvArtist.text = song.artist.firstOrNull()?.fullName ?: "Unknown Artist"
+        
+        holder.tvRank.text = (position + 1).toString()
+        holder.txtTitle.text = song.title
+        holder.txtArtist.text = song.artist.joinToString(", ") { it.fullName }
 
         Glide.with(holder.itemView.context)
             .load(song.coverImage)
             .placeholder(R.drawable.ic_default_album_art)
             .error(R.drawable.ic_default_album_art)
+            .centerCrop()
             .into(holder.imgCover)
 
         holder.itemView.setOnClickListener { onItemClick(song) }
