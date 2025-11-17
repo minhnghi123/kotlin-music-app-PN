@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
+import com.example.musicapp.data.DownloadRepository
 import com.example.musicapp.models.songs.Song
 import com.example.musicapp.ui.artist.ArtistDetailFragment
 
@@ -91,7 +92,7 @@ class UniversalSongAdapter(
                     true
                 }
                 R.id.action_download -> {
-                    downloadSong(view.context, song)
+                    downloadSongWithRepository(view.context, song)
                     true
                 }
                 R.id.action_share -> {
@@ -122,19 +123,10 @@ class UniversalSongAdapter(
         }
     }
 
-    private fun downloadSong(context: Context, song: Song) {
+    private fun downloadSongWithRepository(context: Context, song: Song) {
         try {
-            val request = DownloadManager.Request(Uri.parse(song.fileUrl))
-                .setTitle(song.title)
-                .setDescription("Downloading ${song.title}")
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${song.title}.mp3")
-                .setAllowedOverMetered(true)
-                .setAllowedOverRoaming(true)
-
-            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            downloadManager.enqueue(request)
-            
+            val repository = DownloadRepository(context)
+            repository.startDownload(song)
             Toast.makeText(context, "Downloading ${song.title}...", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Log.e("UniversalSongAdapter", "Download error: ${e.message}", e)

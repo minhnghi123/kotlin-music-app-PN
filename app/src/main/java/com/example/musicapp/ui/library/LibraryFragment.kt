@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
 import com.example.musicapp.data.FavoriteSongsRepository
+import com.example.musicapp.data.DownloadRepository
 import com.example.musicapp.network.ApiClient
 import com.example.musicapp.ui.playlists.PlaylistDetailFragment
 import com.google.android.material.card.MaterialCardView
@@ -26,8 +27,11 @@ class LibraryFragment : Fragment() {
     private lateinit var layoutEmptyPlaylists: View
     private lateinit var btnAddPlaylist: ImageButton
     private lateinit var tvViewAllPlaylists: TextView
+    private lateinit var cardDownloads: MaterialCardView
+    private lateinit var tvDownloadCount: TextView
     
     private lateinit var favoriteRepository: FavoriteSongsRepository
+    private lateinit var downloadRepository: DownloadRepository
     private lateinit var playlistAdapter: PlaylistGridAdapter
 
     override fun onCreateView(
@@ -53,8 +57,11 @@ class LibraryFragment : Fragment() {
         layoutEmptyPlaylists = view.findViewById(R.id.layoutEmptyPlaylists)
         btnAddPlaylist = view.findViewById(R.id.btnAddPlaylist)
         tvViewAllPlaylists = view.findViewById(R.id.tvViewAllPlaylists)
+        cardDownloads = view.findViewById(R.id.cardDownloads)
+        tvDownloadCount = view.findViewById(R.id.tvDownloadCount)
         
         favoriteRepository = FavoriteSongsRepository()
+        downloadRepository = DownloadRepository(requireContext())
     }
 
     private fun setupRecyclerViews() {
@@ -78,11 +85,16 @@ class LibraryFragment : Fragment() {
                 .addToBackStack("ALL_PLAYLISTS")
                 .commit()
         }
+        
+        cardDownloads.setOnClickListener {
+            openDownloads()
+        }
     }
 
     private fun loadData() {
         loadFavoriteSongs()
         loadPlaylists()
+        loadDownloads()
     }
 
     private fun loadFavoriteSongs() {
@@ -120,6 +132,14 @@ class LibraryFragment : Fragment() {
         }
     }
 
+    private fun loadDownloads() {
+        lifecycleScope.launch {
+            downloadRepository.getAllDownloadedSongs().collect { songs ->
+                tvDownloadCount.text = "${songs.size} songs"
+            }
+        }
+    }
+
     private fun openFavoriteSongs() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, com.example.musicapp.ui.favorites.FavoriteSongsFragment.newInstance())
@@ -136,6 +156,13 @@ class LibraryFragment : Fragment() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .addToBackStack("PLAYLIST_DETAIL")
+            .commit()
+    }
+
+    private fun openDownloads() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, DownloadsFragment.newInstance())
+            .addToBackStack("DOWNLOADS")
             .commit()
     }
 

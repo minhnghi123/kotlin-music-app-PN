@@ -112,6 +112,71 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Downloads Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardDownloads"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/gradient_green">
+
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_download"
+                        android:tint="@android:color/white"
+                        android:padding="12dp"
+                        android:background="@drawable/circle_bg_white_alpha"
+                        android:contentDescription="Downloads"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Downloads"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/white"/>
+
+                        <TextView
+                            android:id="@+id/tvDownloadCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 songs"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/white"
+                            android:alpha="0.8"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_next"
+                        android:tint="@android:color/white"
+                        android:contentDescription="Go"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Playlists Section Header -->
             <LinearLayout
                 android:layout_width="match_parent"
