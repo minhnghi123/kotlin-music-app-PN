@@ -178,7 +178,39 @@ class PlayerActivity : AppCompatActivity() {
         popup.menuInflater.inflate(R.menu.song_item_menu, popup.menu)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.action_favorite -> { toggleFavorite(); true }
+                R.id.action_add_playlist -> { 
+                    Toast.makeText(this, "Add to playlist", Toast.LENGTH_SHORT).show()
+                    true 
+                }
+                R.id.action_go_to_artist -> { 
+                    currentSong?.let { song ->
+                        // TODO: Navigate to artist
+                        Toast.makeText(this, "Go to artist", Toast.LENGTH_SHORT).show()
+                    }
+                    true 
+                }
+                R.id.action_download -> { 
+                    currentSong?.let { song ->
+                        // TODO: Download song
+                        Toast.makeText(this, "Download", Toast.LENGTH_SHORT).show()
+                    }
+                    true 
+                }
+                R.id.action_share -> { 
+                    currentSong?.let { song ->
+                        val shareIntent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, "Check out: ${song.title}")
+                            type = "text/plain"
+                        }
+                        startActivity(Intent.createChooser(shareIntent, "Share song via"))
+                    }
+                    true 
+                }
+                R.id.action_favorite -> { 
+                    toggleFavorite()
+                    true 
+                }
                 else -> false
             }
         }

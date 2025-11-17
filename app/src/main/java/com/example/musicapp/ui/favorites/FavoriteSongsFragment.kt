@@ -16,8 +16,16 @@ import com.example.musicapp.MainActivity
 import com.example.musicapp.R
 import com.example.musicapp.data.FavoriteSongsRepository
 import com.example.musicapp.models.songs.Song
-import com.example.musicapp.ui.home.SongAdapter
+import com.example.musicapp.ui.common.UniversalSongAdapter
 import com.example.musicapp.ui.player.PlayerViewModel
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
+import com.example.musicapp.models.playlists.AddToPlaylistRequest
+import com.example.musicapp.models.playlists.CreatePlaylistRequest
+import com.example.musicapp.network.ApiClient
+import com.example.musicapp.ui.playlists.PlaylistAdapter
+import kotlinx.coroutines.launch
 
 class FavoriteSongsFragment : Fragment() {
     
@@ -28,7 +36,7 @@ class FavoriteSongsFragment : Fragment() {
     private lateinit var btnPlayAll: Button
     private lateinit var btnShuffle: Button
     private lateinit var tvSongCount: TextView
-    private lateinit var adapter: FavoriteSongAdapter
+    private lateinit var adapter: UniversalSongAdapter
     private lateinit var repository: FavoriteSongsRepository
     private val playerVM: PlayerViewModel by activityViewModels()
     
@@ -62,19 +70,19 @@ class FavoriteSongsFragment : Fragment() {
     }
     
     private fun setupRecyclerView() {
-        adapter = FavoriteSongAdapter(favoriteSongs) { song ->
-            // 👇 Update PlayerHolder + play
-            com.example.musicapp.ui.player.PlayerHolder.currentSong = song
-            playerVM.play(song)
-        }
-        
-        adapter.setOnHeartClickListener { song ->
-            toggleFavorite(song)
-        }
-        
-        adapter.setOnAddToPlaylistClickListener { song ->
-            // TODO: Add to playlist
-        }
+        adapter = UniversalSongAdapter(
+            items = emptyList(),
+            onClick = { song ->
+                com.example.musicapp.ui.player.PlayerHolder.currentSong = song
+                playerVM.play(song)
+            },
+            onAddToPlaylist = { song ->
+                showPlaylistDialog(song)
+            },
+            onToggleFavorite = { song ->
+                toggleFavorite(song)
+            }
+        )
         
         rvFavoriteSongs.layoutManager = LinearLayoutManager(requireContext())
         rvFavoriteSongs.adapter = adapter
@@ -115,7 +123,6 @@ class FavoriteSongsFragment : Fragment() {
                 favoriteSongs = songs
                 favoriteSongIds = ids ?: emptySet()
                 
-                // 👇 Update adapter với IDs để sync hearts
                 adapter.updateFavoriteIds(favoriteSongIds)
                 adapter.updateData(favoriteSongs)
                 
@@ -177,6 +184,112 @@ class FavoriteSongsFragment : Fragment() {
         btnClearAll.visibility = View.VISIBLE
     }
     
+    private fun showPlaylistDialog(song: Song) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_playlists, null)
+        val rvPlaylists = dialogView.findViewById<RecyclerView>(R.id.rvPlaylists)
+        val btnCreatePlaylist = dialogView.findViewById<Button>(R.id.btnCreatePlaylist)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Chọn playlist")
+            .setView(dialogView)
+            .setNegativeButton("Đóng", null)
+            .create()
+
+        // Load playlists
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.api.getMyPlaylists()
+                val playlists = response.data
+
+                val playlistAdapter = PlaylistAdapter(playlists)
+                rvPlaylists.layoutManager = LinearLayoutManager(requireContext())
+                rvPlaylists.adapter = playlistAdapter
+
+                playlistAdapter.setOnItemClickListener { playlist ->
+                    lifecycleScope.launch {
+                        try {
+                            val body = AddToPlaylistRequest(playlist._id, song._id)
+                            val addResponse = ApiClient.api.addToPlaylist(body)
+                            if (addResponse.isSuccessful) {
+                                val result = addResponse.body()
+                                if (result?.success == true) {
+                                    Toast.makeText(requireContext(), "Đã thêm vào ${playlist.title}", Toast.LENGTH_SHORT).show()
+                                    dialog.dismiss()
+                                } else {
+                                    Toast.makeText(requireContext(), result?.message ?: "Thêm thất bại", Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                Toast.makeText(requireContext(), "Thêm thất bại", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        btnCreatePlaylist.setOnClickListener {
+            showCreatePlaylistDialog(song) {
+                // Reload playlists after creation
+                lifecycleScope.launch {
+                    try {
+                        val response = ApiClient.api.getMyPlaylists()
+                        (rvPlaylists.adapter as? PlaylistAdapter)?.apply {
+                            val newAdapter = PlaylistAdapter(response.data)
+                            rvPlaylists.adapter = newAdapter
+                        }
+                    } catch (_: Exception) {}
+                }
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showCreatePlaylistDialog(song: Song, onCreated: () -> Unit) {
+        val inputView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_create_playlist, null)
+        val etTitle = inputView.findViewById<EditText>(R.id.etTitle)
+        val etDescription = inputView.findViewById<EditText>(R.id.etDescription)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Tạo Playlist mới")
+            .setView(inputView)
+            .setPositiveButton("Tạo") { _, _ ->
+                val title = etTitle.text.toString().trim()
+                val desc = etDescription.text.toString().trim()
+
+                if (title.isNotEmpty()) {
+                    lifecycleScope.launch {
+                        try {
+                            val body = CreatePlaylistRequest(
+                                title = title,
+                                description = desc,
+                                songs = listOf(song._id),
+                                song.coverImage
+                            )
+                            val response = ApiClient.api.createPlaylist(body)
+                            if (response.code == "success") {
+                                Toast.makeText(requireContext(), "Tạo playlist thành công!", Toast.LENGTH_SHORT).show()
+                                onCreated()
+                            } else {
+                                Toast.makeText(requireContext(), "Không thể tạo playlist", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Tên playlist không được trống", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Hủy", null)
+            .show()
+    }
+
     companion object {
         fun newInstance(): FavoriteSongsFragment {
             return FavoriteSongsFragment()

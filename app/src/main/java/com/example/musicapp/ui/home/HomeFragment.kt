@@ -1,4 +1,3 @@
-
 package com.example.musicapp.ui.home
 
 import android.content.Intent
@@ -38,6 +37,7 @@ import com.example.musicapp.ui.playlists.PlaylistAdapter
 import com.example.musicapp.ui.suggestion.SuggestionAdapter
 import com.example.musicapp.utils.PreferenceHelper
 import com.example.myapp.SettingActivity
+import com.example.musicapp.ui.common.UniversalSongAdapter
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,7 +45,7 @@ import retrofit2.Response
 class HomeFragment : Fragment() {
 
     private lateinit var rv: RecyclerView
-    private lateinit var adapter: SongAdapter
+    private lateinit var adapter: UniversalSongAdapter
     private lateinit var viewModel: SongViewModel
     private val playerVM: com.example.musicapp.ui.player.PlayerViewModel by activityViewModels()
     private lateinit var favoriteRepository: FavoriteSongsRepository
@@ -74,34 +74,23 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize repository
         favoriteRepository = FavoriteSongsRepository()
 
         // Playlist section
         rv = view.findViewById(R.id.rvPlaylists)
         rv.layoutManager = LinearLayoutManager(requireContext())
-        adapter = SongAdapter(emptyList()) { song -> playerVM.play(song) }
-//        showplaylist dialog
-        adapter.setOnAddToPlaylistClickListener { song ->
-            showPlaylistDialog(song)
-        }
-        // Set up heart click listener for favorites
-        adapter.setOnHeartClickListener { song ->
-            toggleFavorite(song)
-        }
+        
+        adapter = UniversalSongAdapter(
+            items = emptyList(),
+            onClick = { song -> playerVM.play(song) },
+            onAddToPlaylist = { song -> showPlaylistDialog(song) },
+            onToggleFavorite = { song -> toggleFavorite(song) }
+        )
         rv.adapter = adapter
 
         viewModel = ViewModelProvider(this)[SongViewModel::class.java]
         viewModel.songs.observe(viewLifecycleOwner) { list ->
-            android.util.Log.d("HomeFragment", "=== Loaded ${list.size} songs ===")
-            list.take(3).forEach { song ->
-                android.util.Log.d("HomeFragment", "Song: ${song.title}")
-                android.util.Log.d("HomeFragment", "  Artists: ${song.artist.size} items")
-                song.artist.forEach { artist ->
-                    android.util.Log.d("HomeFragment", "    - ${artist.fullName}")
-                }
-            }
-            adapter.submit(list)
+            adapter.updateData(list)
         }
         viewModel.error.observe(viewLifecycleOwner) { err ->
             err?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show() }

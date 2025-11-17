@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
     <item
         android:id="@+id/action_add_playlist"
-        android:icon="@drawable/ic_add"
         android:title="Add to Playlist" />
     
     <item
-        android:id="@+id/action_favorite"
-        android:icon="@drawable/ic_favorite_border"
-        android:title="Add to Favorites" />
-    
-    <item
-        android:id="@+id/action_share"
-        android:icon="@drawable/ic_share"
-        android:title="Share" />
-    
-    <item
-        android:id="@+id/action_download"
-        android:icon="@drawable/ic_download"
-        android:title="Download" />
-    
-    <item
-        android:id="@+id/action_artist"
-        android:icon="@drawable/ic_artist"
+        android:id="@+id/action_go_to_artist"
         android:title="Go to Artist" />
     
     <item
-        android:id="@+id/action_album"
-        android:icon="@drawable/ic_album"
-        android:title="Go to Album" />
+        android:id="@+id/action_download"
+        android:title="Download" />
+    
+    <item
+        android:id="@+id/action_share"
+        android:title="Share" />
+
+    <!-- 👇 Thêm action_favorite -->
+    <item
+        android:id="@+id/action_favorite"
+        android:title="Add to Favorites" />
+    
 </menu>
