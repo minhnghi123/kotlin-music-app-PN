@@ -66,6 +66,8 @@ class SongAdapter(
             // Title + Artist (lấy artist đầu tiên hoặc "Unknown")
             holder.txtTitle.text = song.title
             holder.txtArtist.text = song.artist.firstOrNull()?.fullName ?: "Unknown Artist"
+           Log.d("SongAdapter", "Artist name: ${song}")
+
             // Load cover
             Glide.with(holder.itemView)
                 .load(song.coverImage)

@@ -16,7 +16,5 @@
     <!-- 👇 Thêm nếu chưa có -->
     <color name="background">#FFFFFF</color>
 
-    <color name="search_box_background">#F2F2F2</color>
-    <color name="tag_background_color">#EFEFEF</color>
 
 </resources>
