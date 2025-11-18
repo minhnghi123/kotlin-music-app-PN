@@ -39,6 +39,12 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     private val _duration = MutableLiveData(0)
     val duration: LiveData<Int> = _duration
 
+    private val _currentPlaylist = MutableLiveData<List<Song>>()
+    val currentPlaylist: LiveData<List<Song>> = _currentPlaylist
+
+    private val _currentIndex = MutableLiveData<Int>(0)
+    val currentIndex: LiveData<Int> = _currentIndex
+
     val player: ExoPlayer = ExoPlayer.Builder(app).build().apply {
         setAudioAttributes(
             AudioAttributes.Builder()
@@ -72,13 +78,13 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private var songQueue: List<Song> = emptyList()
-    private var currentIndex: Int = -1
+    private var currentSongIndex: Int = -1
 
     fun play(song: Song, queue: List<Song> = listOf(song)) {
         songQueue = queue
-        currentIndex = queue.indexOfFirst { it._id == song._id }
-        if (currentIndex == -1) {
-            currentIndex = 0
+        currentSongIndex = queue.indexOfFirst { it._id == song._id }
+        if (currentSongIndex == -1) {
+            currentSongIndex = 0
             songQueue = listOf(song) + queue
         }
 
@@ -112,6 +118,10 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
         PlayerHolder.currentSong = song
     }
 
+    fun setPlaylistAndPlay(playlist: List<Song>, song: Song) {
+        play(song, playlist)
+    }
+
     fun toggle() {
         if (player.isPlaying) player.pause() else player.play()
     }
@@ -130,14 +140,14 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
 
     fun playNext() {
         if (songQueue.isEmpty()) return
-        currentIndex = (currentIndex + 1) % songQueue.size
-        play(songQueue[currentIndex], songQueue)
+        currentSongIndex = (currentSongIndex + 1) % songQueue.size
+        play(songQueue[currentSongIndex], songQueue)
     }
 
     fun playPrevious() {
         if (songQueue.isEmpty()) return
-        currentIndex = if (currentIndex <= 0) songQueue.size - 1 else currentIndex - 1
-        play(songQueue[currentIndex], songQueue)
+        currentSongIndex = if (currentSongIndex <= 0) songQueue.size - 1 else currentSongIndex - 1
+        play(songQueue[currentSongIndex], songQueue)
     }
 
     fun updateProgress() {
