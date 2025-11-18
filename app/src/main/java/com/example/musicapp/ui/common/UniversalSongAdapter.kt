@@ -167,4 +167,8 @@ class UniversalSongAdapter(
         favoriteSongIds = ids
         notifyDataSetChanged()
     }
+
+    fun getAllSongs(): List<Song> {
+        return items
+    }
 }

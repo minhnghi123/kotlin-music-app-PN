@@ -1,6 +1,8 @@
 package com.example.musicapp.ui.home
 
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.EditText
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -71,6 +74,7 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -82,7 +86,10 @@ class HomeFragment : Fragment() {
         
         adapter = UniversalSongAdapter(
             items = emptyList(),
-            onClick = { song -> playerVM.play(song) },
+            onClick = { song -> 
+                // Pass entire song list as queue
+                playerVM.play(song, adapter.getAllSongs())
+            },
             onAddToPlaylist = { song -> showPlaylistDialog(song) },
             onToggleFavorite = { song -> toggleFavorite(song) }
         )
@@ -111,7 +118,8 @@ class HomeFragment : Fragment() {
         rvSuggestions.layoutManager = layoutManager
 
         suggestionAdapter = SuggestionAdapter(emptyList()) { song ->
-            (activity as? MainActivity)?.showMiniPlayer(song)
+            // Pass suggestion list as queue
+            playerVM.play(song, suggestionAdapter.getAllSongs())
         }
         suggestionAdapter.setOnAddToPlaylistClickListener { song ->
             showPlaylistDialog(song)
@@ -229,6 +237,29 @@ class HomeFragment : Fragment() {
         tvViewAll.setOnClickListener {
             Toast.makeText(requireContext(), "View All clicked", Toast.LENGTH_SHORT).show()
         }
+
+        // Register receiver for next/prev from notification
+        val filter = android.content.IntentFilter().apply {
+            addAction("com.example.musicapp.ACTION_NEXT_SONG")
+            addAction("com.example.musicapp.ACTION_PREV_SONG")
+        }
+        requireActivity().registerReceiver(musicControlReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+    }
+
+    private val musicControlReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                "com.example.musicapp.ACTION_NEXT_SONG" -> playerVM.playNext()
+                "com.example.musicapp.ACTION_PREV_SONG" -> playerVM.playPrevious()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        try {
+            requireActivity().unregisterReceiver(musicControlReceiver)
+        } catch (_: Exception) {}
     }
 
     private fun updateHeaderUI() {

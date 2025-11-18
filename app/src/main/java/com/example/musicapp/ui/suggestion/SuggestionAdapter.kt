@@ -72,4 +72,8 @@ class SuggestionAdapter(
         items = newItems
         notifyDataSetChanged()
     }
+
+    fun getAllSongs(): List<Song> {
+        return items
+    }
 }

@@ -1,7 +1,9 @@
 package com.example.musicapp.ui.player
 
 import android.app.Application
+import android.content.Intent
 import android.net.Uri
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +15,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.musicapp.models.songs.Song
+import com.example.musicapp.receiver.MusicService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -54,7 +57,7 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     init {
         // Gán player này cho PlayerHolder
         PlayerHolder.player = player
-        
+
         // Tick cập nhật tiến độ mỗi 500ms
         viewModelScope.launch {
             while (isActive) {
@@ -68,9 +71,19 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun play(song: Song) {
+    private var songQueue: List<Song> = emptyList()
+    private var currentIndex: Int = -1
+
+    fun play(song: Song, queue: List<Song> = listOf(song)) {
+        songQueue = queue
+        currentIndex = queue.indexOfFirst { it._id == song._id }
+        if (currentIndex == -1) {
+            currentIndex = 0
+            songQueue = listOf(song) + queue
+        }
+
         val artistName = song.artist.firstOrNull()?.fullName ?: "Unknown Artist"
-        
+
         val mediaItem = MediaItem.Builder()
             .setUri(song.fileUrl)
             .setMediaMetadata(
@@ -86,7 +99,16 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
         player.prepare()
         player.play()
         _currentSong.postValue(song)
-        
+
+        // Start MusicService with song info
+        val intent = Intent(getApplication(), MusicService::class.java).apply {
+            putExtra("SONG_TITLE", song.title)
+            putExtra("SONG_ARTIST", song.artist.firstOrNull()?.fullName ?: "Unknown")
+            putExtra("SONG_URL", song.fileUrl)
+            putExtra("SONG_COVER", song.coverImage)
+        }
+        ContextCompat.startForegroundService(getApplication(), intent)
+
         PlayerHolder.currentSong = song
     }
 
@@ -107,13 +129,15 @@ class PlayerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun playNext() {
-        // TODO: Implement playlist logic
-        player.seekToNext()
+        if (songQueue.isEmpty()) return
+        currentIndex = (currentIndex + 1) % songQueue.size
+        play(songQueue[currentIndex], songQueue)
     }
 
     fun playPrevious() {
-        // TODO: Implement playlist logic
-        player.seekToPrevious()
+        if (songQueue.isEmpty()) return
+        currentIndex = if (currentIndex <= 0) songQueue.size - 1 else currentIndex - 1
+        play(songQueue[currentIndex], songQueue)
     }
 
     fun updateProgress() {
