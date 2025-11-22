@@ -27,6 +27,7 @@
             android:layout_weight="1"
             android:text="Topic name"
             android:textSize="16sp"
+            android:textColor="@color/textColorPrimary"
             android:paddingStart="12dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -25,13 +25,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:backgroundTint="@color/search_box_background"
+                android:background="@drawable/bg_search"
                 android:hint="Tìm bài hát, nghệ sĩ, album..."
+                android:textColor="@color/textColorPrimary"
+                android:textColorHint="@color/textColorSecondary"
                 android:drawableStart="@drawable/ic_search"
+                android:drawableTint="@color/search_icon_dark"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:singleLine="true"
                 android:padding="12dp"
-                android:background="@drawable/bg_search"
                 android:dropDownHeight="wrap_content"
                 android:dropDownVerticalOffset="8dp"
                 android:dropDownAnchor="@id/etSearch"
@@ -40,14 +44,15 @@
 
             <ImageButton
                 android:id="@+id/btnVoiceSearch"
-                android:layout_width="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_mic"
                 android:contentDescription="Voice Search"
                 android:scaleX="1.1"
-                android:scaleY="1.1"/>
+                android:scaleY="1.1"
+                app:tint="@color/textColorPrimary"
+                android:src="@drawable/ic_mic" />
         </LinearLayout>
 
         <!-- Topic layout (mặc định hiển thị) -->
@@ -62,8 +67,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chủ đề nổi bật"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textSize="16sp"/>
+                android:textColor="@color/textColorPrimary" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTopics"
@@ -82,6 +88,7 @@
             android:text="Đề xuất cho bạn"
             android:textStyle="bold"
             android:textSize="16sp"
+            android:textColor="@color/textColorPrimary"
             android:layout_marginTop="16dp"
             android:visibility="gone"/>
 
@@ -106,6 +113,7 @@
             android:text="Tìm kiếm gần đây"
             android:textStyle="bold"
             android:textSize="16sp"
+            android:textColor="@color/textColorPrimary"
             android:layout_marginTop="16dp"
             android:visibility="gone"/>
 
