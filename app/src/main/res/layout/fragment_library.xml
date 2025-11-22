@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@color/backgroundColor">
 
     <!-- Header -->
     <LinearLayout
@@ -21,7 +21,7 @@
             android:text="Your Library"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:textColor="#1E1E1E"/>
+            android:textColor="@color/textColorPrimary"/>
 
         <ImageButton
             android:id="@+id/btnAddPlaylist"
@@ -29,7 +29,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_add"
-            android:tint="#1E1E1E"
+            app:tint="@color/textColorPrimary"
             android:contentDescription="Create Playlist"/>
     </LinearLayout>
 
@@ -72,10 +72,10 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:src="@drawable/ic_favorite_filled"
-                        android:tint="@android:color/white"
                         android:padding="12dp"
                         android:background="@drawable/circle_bg_white_alpha"
-                        android:contentDescription="Favorites"/>
+                        android:contentDescription="Favorites"
+                        app:tint="@android:color/white" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -137,8 +137,7 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:src="@drawable/ic_download"
-                        android:tint="@android:color/white"
-                        android:padding="12dp"
+                        app:tint="@color/textColorPrimary"                        android:padding="12dp"
                         android:background="@drawable/circle_bg_white_alpha"
                         android:contentDescription="Downloads"/>
 
@@ -192,7 +191,7 @@
                     android:text="My Playlists"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="#1E1E1E"/>
+                    android:textColor="@color/textColorPrimary"/>
 
                 <TextView
                     android:id="@+id/tvViewAllPlaylists"
@@ -200,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:text="View All"
                     android:textSize="14sp"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/textColorPrimary"
                     android:textStyle="bold"
                     android:padding="8dp"
                     android:background="?attr/selectableItemBackground"/>
